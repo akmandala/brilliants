@@ -55,40 +55,47 @@ def image_to_base64(img):
 def replicate_api(prompt, img_pil):
     image_b64 = image_to_base64(img_pil)
 
-    # Create Canny edge map
-    img_cv = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGBA2RGB)
-    img_cv = cv2.resize(img_cv, (512, 512))
-    canny = cv2.Canny(img_cv, 100, 200)
-    canny_rgb = cv2.cvtColor(canny, cv2.COLOR_GRAY2RGB)
-    _, buf = cv2.imencode(".png", canny_rgb)
-    canny_b64 = base64.b64encode(buf).decode("utf-8")
-
     url = "https://api.replicate.com/v1/predictions"
     headers = {
         "Authorization": f"Token {REPLICATE_API_TOKEN}",
         "Content-Type": "application/json",
     }
+
     payload = {
-        "version": "6e2cfa61cb9f4ecf8fcbbcdc5efb37d2d26d342ee6c1ebfa8e3be3dbdb59df82",
+        "version": "8a9c128f4729bb4c7f35f6c9dc93d1770ebf2e2c6877ba44c38d49b98905eeb5",  # Realistic Vision v5.1
         "input": {
             "prompt": prompt,
             "image": f"data:image/png;base64,{image_b64}",
-            "canny_image": f"data:image/png;base64,{canny_b64}",
+            "width": 512,
+            "height": 512,
             "num_inference_steps": 30,
             "guidance_scale": 7.5,
-            "width": 512,
-            "height": 512
+            "strength": 0.75,
+            "prompt_strength": 0.8
         }
     }
-    res = requests.post(url, json=payload, headers=headers).json()
-    pred_id = res["id"]
+
+    res = requests.post(url, json=payload, headers=headers)
+
+    if res.status_code != 201:
+        st.error(f"Replicate API error: {res.status_code} - {res.text}")
+        return None
+
+    res_json = res.json()
+
+    if "id" not in res_json:
+        st.error(f"Replicate response missing ID: {res_json}")
+        return None
+
+    pred_id = res_json["id"]
 
     # Poll for result
     while True:
-        r = requests.get(f"https://api.replicate.com/v1/predictions/{pred_id}", headers=headers).json()
-        if r["status"] == "succeeded":
-            return r["output"][0]
-        elif r["status"] == "failed":
+        poll = requests.get(f"https://api.replicate.com/v1/predictions/{pred_id}", headers=headers).json()
+        if poll["status"] == "succeeded":
+            return poll["output"][0]
+        elif poll["status"] == "failed":
+            st.error("AI generation failed.")
             return None
         time.sleep(2)
 
