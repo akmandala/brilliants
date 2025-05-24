@@ -42,7 +42,7 @@ def extract_head_and_composite(frame):
     # Paste on body template
     body = Image.open(BODY_TEMPLATE_PATH).convert("RGBA")
     paste_x = body.width // 2 - head_pil.width // 2
-    body.paste(head_pil, (paste_x, 40), head_pil)
+    body.paste(head_pil, (paste_x, 0), head_pil)
 
     return body
 
