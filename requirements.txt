@@ -1,6 +1,5 @@
 streamlit
 opencv-python
-face_recognition
-Pillow
 numpy
+Pillow
 requests
