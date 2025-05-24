@@ -1,6 +1,7 @@
 streamlit
 opencv-python
-mediapipe
 Pillow
 numpy
 requests
+mediapipe==0.10.9
+python_version < "3.12"
