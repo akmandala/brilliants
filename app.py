@@ -1,7 +1,6 @@
 import streamlit as st
 import cv2
 import numpy as np
-import face_recognition
 from PIL import Image, ImageDraw
 import requests
 import base64
