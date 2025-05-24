@@ -1,7 +1,7 @@
 import streamlit as st
 import cv2
 import numpy as np
-import mediapipe as mp
+import face_recognition
 from PIL import Image, ImageDraw
 import requests
 import base64
@@ -63,32 +63,35 @@ def capture_and_validate_selfie():
     return success, captured
 
 def extract_head_and_composite(frame):
-    h, w, _ = frame.shape
     rgb_img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    mp_face_mesh = mp.solutions.face_mesh.FaceMesh(static_image_mode=True)
-    result = mp_face_mesh.process(rgb_img)
-    if not result.multi_face_landmarks:
+    face_locations = face_recognition.face_locations(rgb_img)
+
+    if not face_locations:
         return None
-    landmarks = result.multi_face_landmarks[0]
-    coords = [(int(p.x * w), int(p.y * h)) for p in landmarks.landmark]
-    xs = [x for (x, y) in coords[10:338]]
-    ys = [y for (x, y) in coords[10:338]]
-    x_min, x_max = min(xs), max(xs)
-    y_min, y_max = min(ys), max(ys)
-    pad_x = int((x_max - x_min) * 0.3)
-    pad_y = int((y_max - y_min) * 0.5)
-    x_min, x_max = max(0, x_min - pad_x), min(w, x_max + pad_x)
-    y_min, y_max = max(0, y_min - pad_y), min(h, y_max + pad_y)
-    crop = rgb_img[y_min:y_max, x_min:x_max]
+
+    top, right, bottom, left = face_locations[0]
+
+    # Expand with padding
+    pad_x = int((right - left) * 0.3)
+    pad_y = int((bottom - top) * 0.4)
+    x1, x2 = max(0, left - pad_x), min(frame.shape[1], right + pad_x)
+    y1, y2 = max(0, top - pad_y), min(frame.shape[0], bottom + pad_y)
+
+    crop = rgb_img[y1:y2, x1:x2]
     head_pil = Image.fromarray(crop).convert("RGBA")
+
+    # Oval mask
     mask = Image.new("L", head_pil.size, 0)
     draw = ImageDraw.Draw(mask)
     draw.ellipse((0, 0, head_pil.width, head_pil.height), fill=255)
     head_pil.putalpha(mask)
     head_pil = head_pil.resize((160, 180))
+
+    # Paste on body
     body = Image.open(BODY_TEMPLATE_PATH).convert("RGBA")
     paste_x = body.width // 2 - head_pil.width // 2
     body.paste(head_pil, (paste_x, 40), head_pil)
+
     return body
 
 def image_to_base64(img):
