@@ -9,7 +9,7 @@ import time
 import io
 
 REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
-BODY_TEMPLATE_PATH = "body_template.png"
+BODY_TEMPLATE_PATH = "IMG_2979.jpeg"
 
 st.set_page_config(page_title="AI Styling Assistant")
 
