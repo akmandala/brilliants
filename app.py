@@ -63,24 +63,25 @@ def capture_and_validate_selfie():
     return success, captured
 
 def extract_head_and_composite(frame):
-    rgb_img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    face_locations = face_recognition.face_locations(rgb_img)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
-    if not face_locations:
+    if len(faces) == 0:
         return None
 
-    top, right, bottom, left = face_locations[0]
+    (x, y, w, h) = faces[0]
 
-    # Expand with padding
-    pad_x = int((right - left) * 0.3)
-    pad_y = int((bottom - top) * 0.4)
-    x1, x2 = max(0, left - pad_x), min(frame.shape[1], right + pad_x)
-    y1, y2 = max(0, top - pad_y), min(frame.shape[0], bottom + pad_y)
+    # Add padding
+    pad_x = int(w * 0.3)
+    pad_y = int(h * 0.4)
+    x1, y1 = max(0, x - pad_x), max(0, y - pad_y)
+    x2, y2 = min(frame.shape[1], x + w + pad_x), min(frame.shape[0], y + h + pad_y)
 
-    crop = rgb_img[y1:y2, x1:x2]
-    head_pil = Image.fromarray(crop).convert("RGBA")
+    crop = frame[y1:y2, x1:x2]
+    head_pil = Image.fromarray(cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)).convert("RGBA")
 
-    # Oval mask
+    # Oval crop
     mask = Image.new("L", head_pil.size, 0)
     draw = ImageDraw.Draw(mask)
     draw.ellipse((0, 0, head_pil.width, head_pil.height), fill=255)
