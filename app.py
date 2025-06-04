@@ -1,127 +1,121 @@
 import streamlit as st
-import cv2
-import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import requests
-import base64
-import time
-import io
 
-REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
-BODY_TEMPLATE_PATH = "IMG_2979.jpeg"
+# --- Configuration ---
+STORE_EMAIL = "hello@brilliants.boutique"
+MOCKUP_IMAGE = "538D6042-A25D-4DF4-9B69-1235C011F4F4.jpeg"  # Your uploaded mockup
 
-st.set_page_config(page_title="AI Styling Assistant")
+st.set_page_config(page_title="Brilliants Boutique Assistant")
 
-# ---------- Face extraction & compositing ----------
-def extract_head_and_composite(frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+# --- Chat Step State ---
+if "step" not in st.session_state:
+    st.session_state.step = "greeting"
 
-    if len(faces) == 0:
-        return None
+st.title("🛍️ Brilliants.Boutique")
 
-    (x, y, w, h) = faces[0]
+# --- Chat Greeting ---
+if st.session_state.step == "greeting":
+    with st.chat_message("assistant"):
+        st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white shirts, shorts, and hoodies with customizable heatpress prints.")
+        st.markdown("What can we help you with today?")
+    st.session_state.step = "waiting_for_request"
 
-    # Padding
-    pad_x = int(w * 0.3)
-    pad_y = int(h * 0.4)
-    x1, y1 = max(0, x - pad_x), max(0, y - pad_y)
-    x2, y2 = min(frame.shape[1], x + w + pad_x), min(frame.shape[0], y + h + pad_y)
+# --- Chat Input ---
+user_input = st.chat_input("Type your request")
 
-    crop = frame[y1:y2, x1:x2]
-    head_pil = Image.fromarray(cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)).convert("RGBA")
+if user_input:
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-    # Oval mask
-    mask = Image.new("L", head_pil.size, 0)
-    draw = ImageDraw.Draw(mask)
-    draw.ellipse((0, 0, head_pil.width, head_pil.height), fill=255)
-    head_pil.putalpha(mask)
-    head_pil = head_pil.resize((160, 180))
+    # Step: User gives style request
+    if st.session_state.step == "waiting_for_request":
+        if "leopard" in user_input.lower() and "billiard" in user_input.lower():
+            with st.chat_message("assistant"):
+                st.markdown("Here’s a mockup of your request:")
+                st.image(MOCKUP_IMAGE, caption="White shirt + shorts with leopard billiard print")
+                st.markdown("What size would you like for this style?")
+            st.session_state.step = "waiting_for_size"
+        else:
+            with st.chat_message("assistant"):
+                st.markdown("Sorry, I can only process the leopard billiard print mockup in this demo.")
 
-    # Paste on body template
-    body = Image.open(BODY_TEMPLATE_PATH).convert("RGBA")
-    paste_x = body.width // 2 - head_pil.width // 2
-    body.paste(head_pil, (paste_x, 0), head_pil)
+    elif st.session_state.step == "waiting_for_size":
+        st.session_state.size = user_input.strip().upper()
+        st.session_state.step = "ask_info"
+        st.rerun()
 
-    return body
+# --- Collect Order Info ---
+if st.session_state.step == "ask_info":
+    with st.chat_message("assistant"):
+        st.markdown(f"Great! You've selected **{st.session_state.size}**.")
+        st.markdown("Please provide your contact details:")
 
-# ---------- Replicate API ----------
-def image_to_base64(img):
-    buffered = io.BytesIO()
-    img.save(buffered, format="PNG")
-    return base64.b64encode(buffered.getvalue()).decode("utf-8")
+    with st.form("order_form"):
+        name = st.text_input("Your name")
+        email = st.text_input("Your email")
+        phone = st.text_input("WhatsApp number (e.g., +628123456789)")
+        address = st.text_area("Shipping address")
+        submitted = st.form_submit_button("Submit Order")
 
-def replicate_api(prompt, img_pil):
-    image_b64 = image_to_base64(img_pil)
+    if submitted:
+        # -- Email to store --
+        msg = MIMEMultipart()
+        msg["From"] = st.secrets["EMAIL_USER"]
+        msg["To"] = STORE_EMAIL
+        msg["Subject"] = "New Order - Brilliants Boutique"
 
-    url = "https://api.replicate.com/v1/predictions"
-    headers = {
-        "Authorization": f"Token {REPLICATE_API_TOKEN}",
-        "Content-Type": "application/json",
-    }
+        body = f"""
+        New Order:
 
-    payload = {
-        "version": "8a9c128f4729bb4c7f35f6c9dc93d1770ebf2e2c6877ba44c38d49b98905eeb5",  # Realistic Vision v5.1
-        "input": {
-            "prompt": prompt,
-            "image": f"data:image/png;base64,{image_b64}",
-            "width": 512,
-            "height": 512,
-            "num_inference_steps": 30,
-            "guidance_scale": 7.5,
-            "strength": 0.75,
-            "prompt_strength": 0.8
+        Name: {name}
+        Email: {email}
+        WhatsApp: {phone}
+        Size: {st.session_state.size}
+        Address: {address}
+
+        Style: White shirt and shorts with leopard billiard print.
+        """
+        msg.attach(MIMEText(body, "plain"))
+
+        try:
+            server = smtplib.SMTP(st.secrets["EMAIL_HOST"], st.secrets["EMAIL_PORT"])
+            server.starttls()
+            server.login(st.secrets["EMAIL_USER"], st.secrets["EMAIL_PASSWORD"])
+            server.sendmail(st.secrets["EMAIL_USER"], STORE_EMAIL, msg.as_string())
+            server.quit()
+            st.success("📧 Order sent to Brilliants.Boutique!")
+        except Exception as e:
+            st.error(f"Email failed: {e}")
+
+        # -- WhatsApp via Twilio --
+        try:
+            send_whatsapp_message(phone, name)
+            st.success("✅ WhatsApp confirmation sent!")
+        except Exception as e:
+            st.error(f"WhatsApp send failed: {e}")
+
+        st.session_state.step = "done"
+
+# --- Twilio Send WhatsApp ---
+def send_whatsapp_message(to_number, customer_name):
+    account_sid = st.secrets["TWILIO_ACCOUNT_SID"]
+    auth_token = st.secrets["TWILIO_AUTH_TOKEN"]
+    from_whatsapp = st.secrets["TWILIO_PHONE"]
+    media_url = "https://raw.githubusercontent.com/YOUR_REPO/MOCKUP_PATH.jpg"  # host your mockup image publicly
+
+    msg = f"Hi {customer_name}, this is Brilliants.Boutique 💎\n\nHere’s your style preview 👇\nLet us know if you'd like any changes."
+
+    requests.post(
+        f"https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Messages.json",
+        auth=(account_sid, auth_token),
+        data={
+            "From": from_whatsapp,
+            "To": f"whatsapp:{to_number}",
+            "Body": msg,
+            "MediaUrl": media_url
         }
-    }
-
-    res = requests.post(url, json=payload, headers=headers)
-
-    if res.status_code != 201:
-        st.error(f"Replicate API error: {res.status_code} - {res.text}")
-        return None
-
-    res_json = res.json()
-
-    if "id" not in res_json:
-        st.error(f"Replicate response missing ID: {res_json}")
-        return None
-
-    pred_id = res_json["id"]
-
-    # Poll for result
-    while True:
-        poll = requests.get(f"https://api.replicate.com/v1/predictions/{pred_id}", headers=headers).json()
-        if poll["status"] == "succeeded":
-            return poll["output"][0]
-        elif poll["status"] == "failed":
-            st.error("AI generation failed.")
-            return None
-        time.sleep(2)
-
-# ---------- Streamlit UI ----------
-st.title("AI Styling Assistant")
-st.markdown("Take a selfie and generate a styled mockup with AI enhancement")
-
-uploaded_img = st.camera_input("Take your selfie")
-
-if uploaded_img:
-    selfie = Image.open(uploaded_img).convert("RGB")
-    selfie_np = np.array(selfie)
-    selfie_bgr = cv2.cvtColor(selfie_np, cv2.COLOR_RGB2BGR)
-
-    composite = extract_head_and_composite(selfie_bgr)
-    if composite:
-        st.image(composite, caption="Composited Image")
-
-        prompt = st.text_input("Style Prompt", value="A person wearing white hoodie and shorts, soft shadows, skin tone and lighting balanced")
-
-        if st.button("Enhance with AI"):
-            with st.spinner("Sending to Replicate..."):
-                url = replicate_api(prompt, composite)
-                if url:
-                    st.image(url, caption="AI Enhanced Output")
-                else:
-                    st.error("Generation failed.")
-    else:
-        st.error("Could not detect a valid face in the selfie.")
+    )
