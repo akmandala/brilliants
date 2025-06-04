@@ -7,7 +7,7 @@ import requests
 
 # --- Configuration ---
 STORE_EMAIL = "hello@brilliants.boutique"
-MOCKUP_IMAGE = "538D6042-A25D-4DF4-9B69-1235C011F4F4.jpeg"  # Your uploaded mockup
+MOCKUP_IMAGE = "IMG_2979.jpeg"  # Your uploaded mockup
 
 st.set_page_config(page_title="Brilliants Boutique Assistant")
 
