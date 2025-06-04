@@ -9,6 +9,26 @@ import requests
 STORE_EMAIL = "hello@brilliants.boutique"
 MOCKUP_IMAGE = "IMG_2979.jpeg"  # Your uploaded mockup
 
+# --- Twilio Send WhatsApp ---
+def send_whatsapp_message(to_number, customer_name):
+    account_sid = st.secrets["TWILIO_ACCOUNT_SID"]
+    auth_token = st.secrets["TWILIO_AUTH_TOKEN"]
+    from_whatsapp = st.secrets["TWILIO_PHONE"]
+    media_url = "https://github.com/akmandala/mathmandala/blob/main/mockup_withShirt.PNG"  # host your mockup image publicly
+
+    msg = f"Hi {customer_name}, this is Brilliants.Boutique 💎\n\nHere’s your style preview 👇\nLet us know if you'd like any changes."
+
+    requests.post(
+        f"https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Messages.json",
+        auth=(account_sid, auth_token),
+        data={
+            "From": from_whatsapp,
+            "To": f"whatsapp:{to_number}",
+            "Body": msg,
+            "MediaUrl": media_url
+        }
+    )
+
 st.set_page_config(page_title="Brilliants Boutique Assistant")
 
 # --- Chat Step State ---
@@ -100,22 +120,4 @@ if st.session_state.step == "ask_info":
 
         st.session_state.step = "done"
 
-# --- Twilio Send WhatsApp ---
-def send_whatsapp_message(to_number, customer_name):
-    account_sid = st.secrets["TWILIO_ACCOUNT_SID"]
-    auth_token = st.secrets["TWILIO_AUTH_TOKEN"]
-    from_whatsapp = st.secrets["TWILIO_PHONE"]
-    media_url = "https://github.com/akmandala/mathmandala/blob/main/mockup_withShirt.PNG"  # host your mockup image publicly
 
-    msg = f"Hi {customer_name}, this is Brilliants.Boutique 💎\n\nHere’s your style preview 👇\nLet us know if you'd like any changes."
-
-    requests.post(
-        f"https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Messages.json",
-        auth=(account_sid, auth_token),
-        data={
-            "From": from_whatsapp,
-            "To": f"whatsapp:{to_number}",
-            "Body": msg,
-            "MediaUrl": media_url
-        }
-    )
