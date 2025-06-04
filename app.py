@@ -105,7 +105,7 @@ def send_whatsapp_message(to_number, customer_name):
     account_sid = st.secrets["TWILIO_ACCOUNT_SID"]
     auth_token = st.secrets["TWILIO_AUTH_TOKEN"]
     from_whatsapp = st.secrets["TWILIO_PHONE"]
-    media_url = "https://raw.githubusercontent.com/YOUR_REPO/MOCKUP_PATH.jpg"  # host your mockup image publicly
+    media_url = "https://github.com/akmandala/mathmandala/blob/main/mockup_withShirt.PNG"  # host your mockup image publicly
 
     msg = f"Hi {customer_name}, this is Brilliants.Boutique 💎\n\nHere’s your style preview 👇\nLet us know if you'd like any changes."
 
