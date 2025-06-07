@@ -66,8 +66,12 @@ if st.session_state.step == "ask_item":
             with st.chat_message("user"):
                 st.markdown(user_input)
             with st.chat_message("assistant"):
-                st.markdown(f"Great! You selected: **{', '.join(st.session_state.items)}**.")
-                st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
+                selected_items = st.session_state.get("items", [])
+                if isinstance(selected_items, list):
+                    st.markdown(f"Great! You selected: **{', '.join(selected_items)}**.")
+                else:
+                    st.markdown("Great! You selected: [invalid item list]")
+            st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
             st.session_state.step = "ask_size"
         else:
             with st.chat_message("assistant"):
