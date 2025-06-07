@@ -49,12 +49,20 @@ if "pattern_image_url" not in st.session_state:
 
 st.title("👕 Brilliants.Boutique AI Assistant")
 
-# --- Step 1 & 2: Handle item and size input ---
-user_input = st.chat_input("Type your request")
+if "user_input" not in st.session_state:
+    st.session_state.user_input = ""
 
-if user_input:
+input_value = st.chat_input("Type your request")
+
+if input_value:
+    st.session_state.user_input = input_value
+    st.rerun()
+
+if st.session_state.user_input:
     with st.chat_message("user"):
-        st.markdown(user_input)
+        st.markdown(st.session_state.user_input)
+
+    user_input = st.session_state.user_input
 
     # Step: Selecting items
     if st.session_state.step == "ask_item":
@@ -91,7 +99,8 @@ if user_input:
         else:
             with st.chat_message("assistant"):
                 st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
-
+    st.session_state.user_input = ""  # clear after processing
+    
 # --- Wait for user to confirm after capture ---
 if st.session_state.step == "wait_capture_continue":
     if st.button("✅ Continue"):
