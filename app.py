@@ -88,12 +88,7 @@ if st.session_state.user_input:
             st.session_state.size = size
             with st.chat_message("assistant"):
                 st.markdown(f"Awesome! You selected size **{size}**.")
-                st.markdown("Now please capture or upload your pattern image for heatpress:")
-                st.components.v1.iframe(
-                    "https://akmandala.github.io/brilliants/capture.html",
-                    height=720,
-                    scrolling=True
-                )
+
             st.session_state.step = "capture_pattern"
             st.rerun()
         else:
@@ -103,6 +98,12 @@ if st.session_state.user_input:
 
 # --- Step 3: Wait for image on backend ---
 elif st.session_state.step == "capture_pattern":
+    st.markdown("Now please capture or upload your pattern image for heatpress:")
+    st.components.v1.iframe(
+        "https://akmandala.github.io/brilliants/capture.html",
+        height=720,
+        scrolling=True
+    )
     with st.chat_message("assistant"):
         st.markdown("📸 Waiting for image from camera...")
 
