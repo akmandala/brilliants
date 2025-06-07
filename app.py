@@ -49,66 +49,54 @@ if "pattern_image_url" not in st.session_state:
 
 st.title("👕 Brilliants.Boutique AI Assistant")
 
-# --- Step 1: Ask what items to buy ---
-if st.session_state.step == "ask_item":
-    with st.chat_message("assistant"):
-        st.markdown("Hi there! What would you like to order today? We offer white **shirts**, **shorts**, and **hoodies** with custom heatpress designs.")
+# --- Step 1 & 2: Handle user input flexibly ---
+user_input = st.chat_input("Type your request")
 
-    user_input = st.chat_input("Type your desired items (e.g., shirt and short)")
+if user_input:
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-    if user_input:
-        with st.chat_message("user"):
-            st.markdown(user_input)
-
+    # Step: Selecting items
+    if st.session_state.step == "ask_item":
         items = []
         for word in ["shirt", "short", "hoody", "hoodie"]:
             if word in user_input.lower():
                 items.append("hoody" if "hood" in word else word)
-
         if items:
             st.session_state.items = list(set(items))
-            st.session_state.next_input = True  # <- temp flag
+            selected_items = st.session_state.items
+            with st.chat_message("assistant"):
+                st.markdown(f"Great! You selected: **{', '.join(selected_items)}**.")
+                st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
+            st.session_state.step = "ask_size"
         else:
             with st.chat_message("assistant"):
-                st.markdown("❌ Sorry, please mention 'shirt', 'short', or 'hoody'.")
+                st.markdown("❌ Sorry, I didn't catch any of the available items. Please mention 'shirt', 'short', or 'hoody'.")
 
-# Defer transition cleanly
-if st.session_state.get("next_input"):
-    selected_items = st.session_state.get("items", [])
-    with st.chat_message("assistant"):
-        st.markdown(f"Great! You selected: **{', '.join(selected_items)}**.")
-        st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
-    st.session_state.step = "ask_size"
-    del st.session_state["next_input"]  # clean up
-    st.stop()  # re-render for clean transition
-    
-# --- Step 2: Ask for size ---
-elif st.session_state.step == "ask_size":
-    if st.session_state.size == "":
-        user_input = st.chat_input("Type your size (e.g., M)")
-        if user_input:
-            with st.chat_message("user"):
-                st.markdown(user_input)
-            size = user_input.strip().upper()
-            if size in ["XS", "S", "M", "L", "XL"]:
-                st.session_state.size = size
-                st.rerun()
-            else:
-                with st.chat_message("assistant"):
-                    st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
-    else:
-        with st.chat_message("assistant"):
-            st.markdown(f"Awesome! You selected size **{st.session_state.size}**.")
-            st.markdown("Now please capture or upload your pattern image for heatpress:")
-            st.components.v1.iframe(
-                "https://akmandala.github.io/brilliants/capture.html",
-                height=720,
-                scrolling=True
-            )
-            st.markdown("Click capture, then press Continue once ready.")
-            if st.button("✅ Continue"):
-                st.session_state.step = "capture_pattern"
-                st.rerun()
+    # Step: Selecting size
+    elif st.session_state.step == "ask_size":
+        size = user_input.strip().upper()
+        if size in ["XS", "S", "M", "L", "XL"]:
+            st.session_state.size = size
+            with st.chat_message("assistant"):
+                st.markdown(f"Awesome! You selected size **{size}**.")
+                st.markdown("Now please capture or upload your pattern image for heatpress:")
+                st.components.v1.iframe(
+                    "https://akmandala.github.io/brilliants/capture.html",
+                    height=720,
+                    scrolling=True
+                )
+                st.markdown("Click capture, then press Continue once ready.")
+            st.session_state.step = "wait_capture_continue"
+        else:
+            with st.chat_message("assistant"):
+                st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
+
+# --- Button to continue after capture ---
+if st.session_state.step == "wait_capture_continue":
+    if st.button("✅ Continue"):
+        st.session_state.step = "capture_pattern"
+        st.rerun()
 
 # --- Step 3: Wait for image on backend ---
 elif st.session_state.step == "capture_pattern":
