@@ -79,29 +79,31 @@ if st.session_state.step == "ask_item":
 
 # --- Step 2: Ask for size ---
 elif st.session_state.step == "ask_size":
-    user_input = st.chat_input("Type your size (e.g., M)")
-
-    if user_input:
-        with st.chat_message("user"):
-            st.markdown(user_input)
-        size = user_input.strip().upper()
-        if size in ["XS", "S", "M", "L", "XL"]:
-            st.session_state.size = size
-            with st.chat_message("assistant"):
-                st.markdown(f"Awesome! You selected size **{size}**.")
-                st.markdown("Now please capture or upload your pattern image for heatpress:")
-                st.components.v1.iframe(
-                    "https://akmandala.github.io/brilliants/capture.html",
-                    height=720,
-                    scrolling=True
-                )
-                st.markdown("Click capture, then press Continue once ready.")
-                if st.button("✅ Continue"):
-                    st.session_state.step = "capture_pattern"
-                    st.rerun()
-        else:
-            with st.chat_message("assistant"):
-                st.markdown("Please choose a valid size: XS, S, M, L, or XL.")
+    if st.session_state.size == "":
+        user_input = st.chat_input("Type your size (e.g., M)")
+        if user_input:
+            with st.chat_message("user"):
+                st.markdown(user_input)
+            size = user_input.strip().upper()
+            if size in ["XS", "S", "M", "L", "XL"]:
+                st.session_state.size = size
+                st.rerun()
+            else:
+                with st.chat_message("assistant"):
+                    st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
+    else:
+        with st.chat_message("assistant"):
+            st.markdown(f"Awesome! You selected size **{st.session_state.size}**.")
+            st.markdown("Now please capture or upload your pattern image for heatpress:")
+            st.components.v1.iframe(
+                "https://akmandala.github.io/brilliants/capture.html",
+                height=720,
+                scrolling=True
+            )
+            st.markdown("Click capture, then press Continue once ready.")
+            if st.button("✅ Continue"):
+                st.session_state.step = "capture_pattern"
+                st.rerun()
 
 # --- Step 3: Wait for image on backend ---
 elif st.session_state.step == "capture_pattern":
