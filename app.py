@@ -57,26 +57,31 @@ if st.session_state.step == "ask_item":
     user_input = st.chat_input("Type your desired items (e.g., shirt and short)")
 
     if user_input:
+        with st.chat_message("user"):
+            st.markdown(user_input)
+
         items = []
         for word in ["shirt", "short", "hoody", "hoodie"]:
             if word in user_input.lower():
                 items.append("hoody" if "hood" in word else word)
+
         if items:
             st.session_state.items = list(set(items))
-            with st.chat_message("user"):
-                st.markdown(user_input)
-            with st.chat_message("assistant"):
-                selected_items = st.session_state.get("items", [])
-                if isinstance(selected_items, list):
-                    st.markdown(f"Great! You selected: **{', '.join(selected_items)}**.")
-                else:
-                    st.markdown("Great! You selected: [invalid item list]")
-            st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
-            st.session_state.step = "ask_size"
+            st.session_state.next_input = True  # <- temp flag
         else:
             with st.chat_message("assistant"):
-                st.markdown("Sorry, I didn't catch any of the available items. Please mention 'shirt', 'short', or 'hoody'.")
+                st.markdown("❌ Sorry, please mention 'shirt', 'short', or 'hoody'.")
 
+# Defer transition cleanly
+if st.session_state.get("next_input"):
+    selected_items = st.session_state.get("items", [])
+    with st.chat_message("assistant"):
+        st.markdown(f"Great! You selected: **{', '.join(selected_items)}**.")
+        st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
+    st.session_state.step = "ask_size"
+    del st.session_state["next_input"]  # clean up
+    st.stop()  # re-render for clean transition
+    
 # --- Step 2: Ask for size ---
 elif st.session_state.step == "ask_size":
     if st.session_state.size == "":
