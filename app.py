@@ -18,7 +18,7 @@ def fetch_latest_image(prefix="brilliants_", timeout=60):
         try:
             res = requests.get(RENDER_UPLOADS_URL)
             if res.status_code == 200:
-                files = sorted([f for f in res.json().get("files", []) if f.startswith(prefix) and f.endswith(".jpg")])
+                files = sorted([f for f in res.json().get("files", []) if isinstance(f, str) and f.startswith(prefix) and f.endswith(".jpg")])
                 if files:
                     latest = files[-1]
                     image_url = f"{RENDER_FILE_BASE}/{latest}"
@@ -64,7 +64,7 @@ if user_input:
                 items.append("hoody" if "hood" in word else word)
         if items:
             st.session_state.items = list(set(items))
-            selected_items = st.session_state.items
+            selected_items = list(st.session_state.items)
             with st.chat_message("assistant"):
                 st.markdown(f"Great! You selected: **{', '.join(selected_items)}**.")
                 st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
