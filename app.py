@@ -95,6 +95,7 @@ if st.session_state.user_input:
                     scrolling=True
                 )
             st.session_state.step = "capture_pattern"
+            st.rerun()
         else:
             with st.chat_message("assistant"):
                 st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
