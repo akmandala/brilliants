@@ -49,7 +49,7 @@ if "pattern_image_url" not in st.session_state:
 
 st.title("👕 Brilliants.Boutique AI Assistant")
 
-# --- Step 1 & 2: Handle user input flexibly ---
+# --- Step 1 & 2: Handle item and size input ---
 user_input = st.chat_input("Type your request")
 
 if user_input:
@@ -92,7 +92,7 @@ if user_input:
             with st.chat_message("assistant"):
                 st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
 
-# --- Button to continue after capture ---
+# --- Wait for user to confirm after capture ---
 if st.session_state.step == "wait_capture_continue":
     if st.button("✅ Continue"):
         st.session_state.step = "capture_pattern"
@@ -103,7 +103,6 @@ elif st.session_state.step == "capture_pattern":
     with st.chat_message("assistant"):
         st.markdown("📸 Waiting for image from camera...")
 
-    placeholder = st.empty()
     st.info("⏳ Waiting for your uploaded image from the camera...")
     with st.spinner("Looking for your image..."):
         image_path, image_name = fetch_latest_image(timeout=120)
