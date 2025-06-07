@@ -72,7 +72,7 @@ if st.session_state.user_input:
                 items.append("hoody" if "hood" in word else word)
         if items:
             st.session_state.items = list(set(items))
-            selected_items = st.session_state.get("items", []))
+            selected_items = st.session_state.get("items", [])
             with st.chat_message("assistant"):
                 st.markdown(f"Great! You selected: **{', '.join(selected_items)}**.")
                 st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
