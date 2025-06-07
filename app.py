@@ -88,56 +88,45 @@ if st.session_state.user_input:
             st.session_state.size = size
             with st.chat_message("assistant"):
                 st.markdown(f"Awesome! You selected size **{size}**.")
+                st.markdown("Now please capture or upload your pattern image for heatpress:")
+                st.components.v1.iframe(
+                    "https://akmandala.github.io/brilliants/capture.html",
+                    height=720,
+                    scrolling=True
+                )
+                st.markdown("📸 Waiting for image from camera...")
 
-            st.session_state.step = "capture_pattern"
-            st.rerun()
+            st.info("⏳ Waiting for your uploaded image from the camera...")
+            with st.spinner("Looking for your image..."):
+                image_path, image_name = fetch_latest_image(timeout=120)
+                if image_path:
+                    st.session_state.pattern_image_url = f"{RENDER_FILE_BASE}/{image_name}"
+
+                    # --- AI mockup generation inline ---
+                    with st.chat_message("assistant"):
+                        st.markdown("✨ Generating mockups using AI...")
+
+                    mockup_urls = [
+                        st.session_state.pattern_image_url + "?v=1",
+                        st.session_state.pattern_image_url + "?v=2",
+                        st.session_state.pattern_image_url + "?v=3"
+                    ]
+
+                    st.markdown("Here are your style previews, select one:")
+                    cols = st.columns(3)
+                    for i, col in enumerate(cols):
+                        with col:
+                            st.image(mockup_urls[i], caption=f"Option {i+1}")
+                            if st.button(f"Select Option {i+1}"):
+                                st.session_state.selected_mockup = mockup_urls[i]
+                                st.session_state.step = "ask_contact"
+                                st.experimental_rerun()  # rerun only after button
+                else:
+                    with st.chat_message("assistant"):
+                        st.markdown("⚠️ No image received. Please retry or refresh.")
         else:
             with st.chat_message("assistant"):
                 st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
-    st.session_state.user_input = ""  # clear after processing
-
-# --- Step 3: Wait for image on backend ---
-elif st.session_state.step == "capture_pattern":
-    st.markdown("Now please capture or upload your pattern image for heatpress:")
-    st.components.v1.iframe(
-        "https://akmandala.github.io/brilliants/capture.html",
-        height=720,
-        scrolling=True
-    )
-    with st.chat_message("assistant"):
-        st.markdown("📸 Waiting for image from camera...")
-
-    st.info("⏳ Waiting for your uploaded image from the camera...")
-    with st.spinner("Looking for your image..."):
-        image_path, image_name = fetch_latest_image(timeout=120)
-        if image_path:
-            st.session_state.pattern_image_url = f"{RENDER_FILE_BASE}/{image_name}"
-            st.session_state.step = "ai_generate"
-            st.rerun()
-
-    with st.chat_message("assistant"):
-        st.markdown("⚠️ No image received. Please retry or refresh.")
-
-# --- Step 4: AI-enhance pattern and offer 3 choices (mockups) ---
-elif st.session_state.step == "ai_generate":
-    with st.chat_message("assistant"):
-        st.markdown("✨ Generating mockups using AI...")
-
-    mockup_urls = [
-        st.session_state.pattern_image_url + "?v=1",
-        st.session_state.pattern_image_url + "?v=2",
-        st.session_state.pattern_image_url + "?v=3"
-    ]
-
-    st.markdown("Here are your style previews, select one:")
-    cols = st.columns(3)
-    for i, col in enumerate(cols):
-        with col:
-            st.image(mockup_urls[i], caption=f"Option {i+1}")
-            if st.button(f"Select Option {i+1}"):
-                st.session_state.selected_mockup = mockup_urls[i]
-                st.session_state.step = "ask_contact"
-                st.rerun()
 
 # --- Step 5: Collect customer contact info ---
 elif st.session_state.step == "ask_contact":
