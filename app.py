@@ -12,7 +12,7 @@ RENDER_UPLOADS_URL = "https://mathmandala-upload.onrender.com/uploads"
 RENDER_FILE_BASE = "https://mathmandala-upload.onrender.com/files"
 
 # --- Helper: Download Latest File from Render ---
-def fetch_latest_image(prefix="brilliants_", timeout=120):
+def fetch_latest_image(prefix="brilliants_", timeout=60):
     start = time.time()
     while time.time() - start < timeout:
         try:
@@ -94,18 +94,11 @@ if st.session_state.user_input:
                     height=720,
                     scrolling=True
                 )
-                st.markdown("Click capture, then press Continue once ready.")
-            st.session_state.step = "wait_capture_continue"
+            st.session_state.step = "capture_pattern"
         else:
             with st.chat_message("assistant"):
                 st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
     st.session_state.user_input = ""  # clear after processing
-    
-# --- Wait for user to confirm after capture ---
-if st.session_state.step == "wait_capture_continue":
-    if st.button("✅ Continue"):
-        st.session_state.step = "capture_pattern"
-        st.rerun()
 
 # --- Step 3: Wait for image on backend ---
 elif st.session_state.step == "capture_pattern":
@@ -114,7 +107,7 @@ elif st.session_state.step == "capture_pattern":
 
     st.info("⏳ Waiting for your uploaded image from the camera...")
     with st.spinner("Looking for your image..."):
-        image_path, image_name = fetch_latest_image()
+        image_path, image_name = fetch_latest_image(timeout=120)
         if image_path:
             st.session_state.pattern_image_url = f"{RENDER_FILE_BASE}/{image_name}"
             st.session_state.step = "ai_generate"
