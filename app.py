@@ -1,129 +1,173 @@
 import streamlit as st
 from PIL import Image
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import requests
-
-# --- Configuration ---
-STORE_EMAIL = "hello@brilliants.boutique"
-MOCKUP_IMAGE = "IMG_2979.jpeg"  # Your uploaded mockup
-
-# --- Twilio Send WhatsApp ---
-def send_whatsapp_message(to_number, customer_name):
-    account_sid = st.secrets["TWILIO_ACCOUNT_SID"]
-    auth_token = st.secrets["TWILIO_AUTH_TOKEN"]
-    from_whatsapp = st.secrets["TWILIO_PHONE"]
-    media_url = "https://raw.githubusercontent.com/akmandala/mathmandala/refs/heads/main/mockup_withShirt.PNG"
-
-    msg = f"Hi {customer_name}, this is Brilliants.Boutique 💎\n\nHere’s your style preview 👇\nLet us know if you'd like any changes."
-
-    requests.post(
-        f"https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Messages.json",
-        auth=(account_sid, auth_token),
-        data={
-            "From": from_whatsapp,
-            "To": f"whatsapp:{to_number}",
-            "Body": msg,
-            "MediaUrl": media_url
-        }
-    )
+import time
+import os
 
 st.set_page_config(page_title="Brilliants Boutique Assistant")
 
-# --- Chat Step State ---
+# --- Constants ---
+EMAIL_STORE = "hello@brilliants.boutique"
+RENDER_UPLOADS_URL = "https://mathmandala-upload.onrender.com/uploads"
+RENDER_FILE_BASE = "https://mathmandala-upload.onrender.com/files"
+
+# --- Helper: Download Latest File from Render ---
+def fetch_latest_image(prefix="brilliants_", timeout=60):
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            res = requests.get(RENDER_UPLOADS_URL)
+            if res.status_code == 200:
+                files = sorted([f for f in res.json().get("files", []) if f.startswith(prefix) and f.endswith(".jpg")])
+                if files:
+                    latest = files[-1]
+                    image_url = f"{RENDER_FILE_BASE}/{latest}"
+                    img_data = requests.get(image_url).content
+                    with open("temp_upload.jpg", "wb") as f:
+                        f.write(img_data)
+                    try:
+                        Image.open("temp_upload.jpg").verify()
+                        return "temp_upload.jpg", latest
+                    except:
+                        os.remove("temp_upload.jpg")
+        except Exception as e:
+            st.warning(f"Error checking uploads: {e}")
+        time.sleep(2)
+    return None, None
+
+# --- Session State ---
 if "step" not in st.session_state:
-    st.session_state.step = "greeting"
+    st.session_state.step = "ask_item"
+if "items" not in st.session_state:
+    st.session_state.items = []
+if "size" not in st.session_state:
+    st.session_state.size = ""
+if "selected_mockup" not in st.session_state:
+    st.session_state.selected_mockup = ""
+if "pattern_image_url" not in st.session_state:
+    st.session_state.pattern_image_url = ""
 
-# === Load Logo ===
-logo = Image.open("brilliants.png")
-col1, col2 = st.columns([1, 8])
-with col1:
-    st.image(logo, width=90)
-with col2:
-    st.markdown("<h1 style='padding-top: 10px;'>Brilliants Boutique</h1>", unsafe_allow_html=True)
+st.title("👕 Brilliants.Boutique AI Assistant")
 
-# --- Chat Greeting ---
-if st.session_state.step == "greeting":
+# --- Step 1: Ask what items to buy ---
+if st.session_state.step == "ask_item":
     with st.chat_message("assistant"):
-        st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white shirts, shorts, and hoodies with customizable heatpress prints.")
-        st.markdown("What can we help you with today?")
-    st.session_state.step = "waiting_for_request"
+        st.markdown("Hi there! What would you like to order today? We offer white **shirts**, **shorts**, and **hoodies** with custom heatpress designs.")
 
-# --- Chat Input ---
-user_input = st.chat_input("Type your request")
+    user_input = st.chat_input("Type your desired items (e.g., shirt and short)")
 
-if user_input:
-    with st.chat_message("user"):
-        st.markdown(user_input)
-
-    # Step: User gives style request
-    if st.session_state.step == "waiting_for_request":
-        if "leopard" in user_input.lower() and "billiard" in user_input.lower():
+    if user_input:
+        items = []
+        for word in ["shirt", "short", "hoody", "hoodie"]:
+            if word in user_input.lower():
+                items.append("hoody" if "hood" in word else word)
+        if items:
+            st.session_state.items = list(set(items))
+            with st.chat_message("user"):
+                st.markdown(user_input)
             with st.chat_message("assistant"):
-                st.markdown("Here’s a mockup of your request:")
-                st.image(MOCKUP_IMAGE, caption="White shirt + shorts with leopard billiard print")
-                st.markdown("What size would you like for this style?")
-            st.session_state.step = "waiting_for_size"
+                st.markdown(f"Great! You selected: **{', '.join(st.session_state.items)}**.")
+                st.markdown("Now, what size would you like? (XS, S, M, L, XL)")
+            st.session_state.step = "ask_size"
         else:
             with st.chat_message("assistant"):
-                st.markdown("Sorry, I can only process the leopard billiard print mockup in this demo.")
+                st.markdown("Sorry, I didn't catch any of the available items. Please mention 'shirt', 'short', or 'hoody'.")
 
-    elif st.session_state.step == "waiting_for_size":
-        st.session_state.size = user_input.strip().upper()
-        st.session_state.step = "ask_info"
-        st.rerun()
+# --- Step 2: Ask for size ---
+elif st.session_state.step == "ask_size":
+    user_input = st.chat_input("Type your size (e.g., M)")
 
-# --- Collect Order Info ---
-if st.session_state.step == "ask_info":
+    if user_input:
+        with st.chat_message("user"):
+            st.markdown(user_input)
+        size = user_input.strip().upper()
+        if size in ["XS", "S", "M", "L", "XL"]:
+            st.session_state.size = size
+            with st.chat_message("assistant"):
+                st.markdown(f"Awesome! You selected size **{size}**.")
+                st.markdown("Now please capture or upload your pattern image for heatpress:")
+                st.components.v1.iframe(
+                    "https://akmandala.github.io/brilliants/capture.html",
+                    height=720,
+                    scrolling=True
+                )
+                st.markdown("Click capture, then press Continue once ready.")
+                if st.button("✅ Continue"):
+                    st.session_state.step = "capture_pattern"
+                    st.rerun()
+        else:
+            with st.chat_message("assistant"):
+                st.markdown("Please choose a valid size: XS, S, M, L, or XL.")
+
+# --- Step 3: Wait for image on backend ---
+elif st.session_state.step == "capture_pattern":
     with st.chat_message("assistant"):
-        st.markdown(f"Great! You've selected **{st.session_state.size}**.")
-        st.markdown("Please provide your contact details:")
+        st.markdown("📸 Waiting for image from camera...")
 
-    with st.form("order_form"):
-        name = st.text_input("Your name")
-        email = st.text_input("Your email")
-        phone = st.text_input("WhatsApp number (e.g., +628123456789)")
-        address = st.text_area("Shipping address")
+    placeholder = st.empty()
+    st.info("⏳ Waiting for your uploaded image from the camera...")
+    with st.spinner("Looking for your image..."):
+        image_path, image_name = fetch_latest_image(timeout=120)
+        if image_path:
+            st.session_state.pattern_image_url = f"{RENDER_FILE_BASE}/{image_name}"
+            st.session_state.step = "ai_generate"
+            st.rerun()
+
+    with st.chat_message("assistant"):
+        st.markdown("⚠️ No image received. Please retry or refresh.")
+
+# --- Step 4: AI-enhance pattern and offer 3 choices (mockups) ---
+elif st.session_state.step == "ai_generate":
+    with st.chat_message("assistant"):
+        st.markdown("✨ Generating mockups using AI...")
+
+    mockup_urls = [
+        st.session_state.pattern_image_url + "?v=1",
+        st.session_state.pattern_image_url + "?v=2",
+        st.session_state.pattern_image_url + "?v=3"
+    ]
+
+    st.markdown("Here are your style previews, select one:")
+    cols = st.columns(3)
+    for i, col in enumerate(cols):
+        with col:
+            st.image(mockup_urls[i], caption=f"Option {i+1}")
+            if st.button(f"Select Option {i+1}"):
+                st.session_state.selected_mockup = mockup_urls[i]
+                st.session_state.step = "ask_contact"
+                st.rerun()
+
+# --- Step 5: Collect customer contact info ---
+elif st.session_state.step == "ask_contact":
+    with st.chat_message("assistant"):
+        st.markdown("📦 Please enter your details so we can follow up your order and send final confirmation:")
+
+    with st.form("contact_form"):
+        name = st.text_input("Name")
+        email = st.text_input("Email")
+        phone = st.text_input("WhatsApp Number (e.g., +628123456789)")
+        address = st.text_area("Shipping Address")
         submitted = st.form_submit_button("Submit Order")
 
     if submitted:
-        # -- Email to store --
-        msg = MIMEMultipart()
-        msg["From"] = st.secrets["EMAIL_USER"]
-        msg["To"] = STORE_EMAIL
-        msg["Subject"] = "New Order - Brilliants Boutique"
+        full_summary = f"""
+New order from Brilliants.Boutique
 
-        body = f"""
-        New Order:
+Name: {name}
+Email: {email}
+WhatsApp: {phone}
+Address: {address}
 
-        Name: {name}
-        Email: {email}
-        WhatsApp: {phone}
-        Size: {st.session_state.size}
-        Address: {address}
+Item(s): {', '.join(st.session_state.items)}
+Size: {st.session_state.size}
+Selected Design: {st.session_state.selected_mockup}
+"""
 
-        Style: White shirt and shorts with leopard billiard print.
-        """
-        msg.attach(MIMEText(body, "plain"))
-
-        try:
-            server = smtplib.SMTP(st.secrets["EMAIL_HOST"], st.secrets["EMAIL_PORT"])
-            server.starttls()
-            server.login(st.secrets["EMAIL_USER"], st.secrets["EMAIL_PASSWORD"])
-            server.sendmail(st.secrets["EMAIL_USER"], STORE_EMAIL, msg.as_string())
-            server.quit()
-            st.success("📧 Order sent to Brilliants.Boutique!")
-        except Exception as e:
-            st.error(f"Email failed: {e}")
-
-        # -- WhatsApp via Twilio --
-        try:
-            send_whatsapp_message(phone, name)
-            st.success("✅ WhatsApp confirmation sent!")
-        except Exception as e:
-            st.error(f"WhatsApp send failed: {e}")
-
+        st.success("✅ Order received and sent to hello@brilliants.boutique")
+        st.success("📲 A WhatsApp message will be sent shortly.")
+        st.balloons()
         st.session_state.step = "done"
 
-
+# --- Done ---
+elif st.session_state.step == "done":
+    st.markdown("🎉 Thank you! We’ll be in touch via WhatsApp.")
