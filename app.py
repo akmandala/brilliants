@@ -120,7 +120,7 @@ if st.session_state.user_input:
                             if st.button(f"Select Option {i+1}"):
                                 st.session_state.selected_mockup = mockup_urls[i]
                                 st.session_state.step = "ask_contact"
-                                st.experimental_rerun()  # rerun only after button
+                                st.rerun()  # rerun only after button
                 else:
                     with st.chat_message("assistant"):
                         st.markdown("⚠️ No image received. Please retry or refresh.")
