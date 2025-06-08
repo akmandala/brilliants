@@ -134,12 +134,12 @@ if st.session_state.user_input:
                                     st.warning(f"⚠️ Cleanup error: {e}")
 
                                 with st.chat_message("assistant"):
-                                    st.markdown("📦 Please enter your details so we can follow up your order and send final confirmation:")
+                                    st.markdown("📦 Please enter your details:")
 
                                 with st.form("contact_form"):
                                     name = st.text_input("Name")
                                     email = st.text_input("Email")
-                                    phone = st.text_input("WhatsApp Number (e.g., +628123456789)")
+                                    phone = st.text_input("WhatsApp Number (e.g., +447712345678)")
                                     address = st.text_area("Shipping Address")
                                     submitted = st.form_submit_button("Submit Order")
                                 if submitted:
@@ -155,12 +155,27 @@ Item(s): {', '.join(st.session_state.items)}
 Size: {st.session_state.size}
 Selected Design: {st.session_state.selected_mockup}
 """
-    
                                     st.success("✅ Order received and sent to hello@brilliants.boutique")
                                     st.success("📲 A WhatsApp message will be sent shortly.")
                                     st.balloons()
+                                
+                                    # Move to done
                                     st.session_state.step = "done"
-                                    st.session_state.user_input = ""
+                                    st.session_state.user_input = ""  # Clear last input
+
+                                # --- Done ---
+                                elif st.session_state.step == "done":
+                                    st.markdown("🎉 Thank you! We’ll be in touch via WhatsApp.")
+
+                                    if st.button("🔁 Order again?"):
+                                        # Reset all necessary states
+                                        st.session_state.step = "ask_item"
+                                        st.session_state.items = []
+                                        st.session_state.size = ""
+                                        st.session_state.selected_mockup = ""
+                                        st.session_state.pattern_image_url = ""
+                                        st.session_state.user_input = ""
+                                        st.rerun()
                 else:
                     with st.chat_message("assistant"):
                         st.markdown("⚠️ No image received. Please retry or refresh.")
