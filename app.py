@@ -155,12 +155,12 @@ Item(s): {', '.join(st.session_state.items)}
 Size: {st.session_state.size}
 Selected Design: {st.session_state.selected_mockup}
 """
-
-                                st.success("✅ Order received and sent to hello@brilliants.boutique")
-                                st.success("📲 A WhatsApp message will be sent shortly.")
-                                st.balloons()
-                                st.session_state.step = "done"
-                
+    
+                                    st.success("✅ Order received and sent to hello@brilliants.boutique")
+                                    st.success("📲 A WhatsApp message will be sent shortly.")
+                                    st.balloons()
+                                    st.session_state.step = "done"
+                                    st.session_state.user_input = ""
                 else:
                     with st.chat_message("assistant"):
                         st.markdown("⚠️ No image received. Please retry or refresh.")
