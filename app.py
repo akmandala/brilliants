@@ -102,6 +102,16 @@ if st.session_state.user_input:
                 if image_path:
                     st.session_state.pattern_image_url = f"{RENDER_FILE_BASE}/{image_name}"
 
+                    # Clean up uploaded images from Render backend
+                    try:
+                        delete_response = requests.delete("https://mathmandala-upload.onrender.com/delete-all")
+                        if delete_response.status_code == 200:
+                            st.info("🧹 Uploaded images cleaned up from server.")
+                        else:
+                            st.warning(f"⚠️ Cleanup failed: {delete_response.status_code}")
+                    except Exception as e:
+                        st.warning(f"⚠️ Cleanup error: {e}")
+
                     # --- AI mockup generation inline ---
                     with st.chat_message("assistant"):
                         st.markdown("✨ Generating mockups using AI...")
