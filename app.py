@@ -48,9 +48,9 @@ if "pattern_image_url" not in st.session_state:
     st.session_state.pattern_image_url = ""
 
 st.title("👕 Brilliants.Boutique AI Assistant")
-with st.chat_message("assistant"):
-    st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white shirts, shorts, and hoodies with customizable heatpress prints.")
-    st.markdown("What can we help you with today?")
+
+st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white shirts, shorts, and hoodies with customizable heatpress prints.")
+st.markdown("What can we help you with today?")
     
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
