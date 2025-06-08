@@ -132,29 +132,18 @@ if st.session_state.user_input:
                                         st.warning(f"⚠️ Cleanup failed: {delete_response.status_code}")
                                 except Exception as e:
                                     st.warning(f"⚠️ Cleanup error: {e}")
-                                
-                                st.rerun()  # rerun only after button
-                else:
-                    with st.chat_message("assistant"):
-                        st.markdown("⚠️ No image received. Please retry or refresh.")
-        else:
-            with st.chat_message("assistant"):
-                st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
 
-# --- Step 5: Collect customer contact info ---
-elif st.session_state.step == "ask_contact":
-    with st.chat_message("assistant"):
-        st.markdown("📦 Please enter your details so we can follow up your order and send final confirmation:")
+                                with st.chat_message("assistant"):
+                                    st.markdown("📦 Please enter your details so we can follow up your order and send final confirmation:")
 
-    with st.form("contact_form"):
-        name = st.text_input("Name")
-        email = st.text_input("Email")
-        phone = st.text_input("WhatsApp Number (e.g., +628123456789)")
-        address = st.text_area("Shipping Address")
-        submitted = st.form_submit_button("Submit Order")
-
-    if submitted:
-        full_summary = f"""
+                                with st.form("contact_form"):
+                                    name = st.text_input("Name")
+                                    email = st.text_input("Email")
+                                    phone = st.text_input("WhatsApp Number (e.g., +628123456789)")
+                                    address = st.text_area("Shipping Address")
+                                    submitted = st.form_submit_button("Submit Order")
+                                if submitted:
+                                    full_summary = f"""
 New order from Brilliants.Boutique
 
 Name: {name}
@@ -167,10 +156,17 @@ Size: {st.session_state.size}
 Selected Design: {st.session_state.selected_mockup}
 """
 
-        st.success("✅ Order received and sent to hello@brilliants.boutique")
-        st.success("📲 A WhatsApp message will be sent shortly.")
-        st.balloons()
-        st.session_state.step = "done"
+                                st.success("✅ Order received and sent to hello@brilliants.boutique")
+                                st.success("📲 A WhatsApp message will be sent shortly.")
+                                st.balloons()
+                                st.session_state.step = "done"
+                
+                else:
+                    with st.chat_message("assistant"):
+                        st.markdown("⚠️ No image received. Please retry or refresh.")
+        else:
+            with st.chat_message("assistant"):
+                st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
 
 # --- Done ---
 elif st.session_state.step == "done":
