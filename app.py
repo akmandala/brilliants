@@ -109,7 +109,7 @@ if st.session_state.user_input:
 
                     # --- AI mockup generation inline ---
                     with st.chat_message("assistant"):
-                        st.markdown("✨ Generating mockups using AI...")
+                        st.markdown("✨ Generating mockups...")
 
                     mockup_urls = [
                         st.session_state.pattern_image_url + "?v=1",
