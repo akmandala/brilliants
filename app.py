@@ -46,15 +46,18 @@ if "selected_mockup" not in st.session_state:
     st.session_state.selected_mockup = ""
 if "pattern_image_url" not in st.session_state:
     st.session_state.pattern_image_url = ""
-
-st.title("👕 Brilliants.Boutique AI Assistant")
-st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white shirts, shorts, and hoodies with customizable heatpress prints.")
-st.markdown("What can we help you with today?")
-
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 
-input_value = st.chat_input("Type your request")
+st.title("👕 Brilliants.Boutique AI Assistant")
+st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white shirts, shorts, and hoodies with customizable heatpress prints.")
+
+# 👉 Initial assistant message
+if st.session_state.step == "ask_item" and not st.session_state.user_input:
+    with st.chat_message("assistant"):
+        st.markdown("Can I know what item you are interested in?")
+
+input_value = st.chat_input("Type your request", key="chat_prompt")
 
 if input_value:
     st.session_state.user_input = input_value
@@ -119,70 +122,51 @@ if st.session_state.user_input:
                     for i, col in enumerate(cols):
                         with col:
                             st.image(mockup_urls[i], caption=f"Option {i+1}")
-                            if st.button(f"Select Option {i+1}"):
-                                st.session_state.selected_mockup = mockup_urls[i]
-                                st.session_state.step = "ask_contact"
 
-                                # Clean up uploaded images from Render backend
-                                try:
-                                    delete_response = requests.delete("https://mathmandala-upload.onrender.com/delete-all")
-                                    if delete_response.status_code == 200:
-                                        st.info("🧹 Uploaded images cleaned up from server.")
-                                    else:
-                                        st.warning(f"⚠️ Cleanup failed: {delete_response.status_code}")
-                                except Exception as e:
-                                    st.warning(f"⚠️ Cleanup error: {e}")
+                    st.chat_message("assistant").markdown("Here are styles 1, 2, 3. Please type 1, 2, or 3.")
 
-                                with st.chat_message("assistant"):
-                                    st.markdown("📦 Please enter your details:")
-
-                                with st.form("contact_form"):
-                                    name = st.text_input("Name")
-                                    email = st.text_input("Email")
-                                    phone = st.text_input("WhatsApp Number (e.g., +447712345678)")
-                                    address = st.text_area("Shipping Address")
-                                    submitted = st.form_submit_button("Submit Order")
-                                if submitted:
-                                    full_summary = f"""
-New order from Brilliants.Boutique
-
-Name: {name}
-Email: {email}
-WhatsApp: {phone}
-Address: {address}
-
-Item(s): {', '.join(st.session_state.items)}
-Size: {st.session_state.size}
-Selected Design: {st.session_state.selected_mockup}
-"""
-                                    st.success("✅ Order received and sent to hello@brilliants.boutique")
-                                    st.success("📲 A WhatsApp message will be sent shortly.")
-                                    st.balloons()
-                                
-                                    # Move to done
-                                    st.session_state.step = "done"
-                                    st.session_state.user_input = ""  # Clear last input
-
-                                # --- Done ---
-                                elif st.session_state.step == "done":
-                                    st.markdown("🎉 Thank you! We’ll be in touch via WhatsApp.")
-
-                                    if st.button("🔁 Order again?"):
-                                        # Reset all necessary states
-                                        st.session_state.step = "ask_item"
-                                        st.session_state.items = []
-                                        st.session_state.size = ""
-                                        st.session_state.selected_mockup = ""
-                                        st.session_state.pattern_image_url = ""
-                                        st.session_state.user_input = ""
-                                        st.rerun()
                 else:
                     with st.chat_message("assistant"):
                         st.markdown("⚠️ No image received. Please retry or refresh.")
+            st.session_state.step = "ask_mockup_choice"
         else:
             with st.chat_message("assistant"):
                 st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
 
-# --- Done ---
-elif st.session_state.step == "done":
-    st.markdown("🎉 Thank you! We’ll be in touch via WhatsApp.")
+    # STEP 4: Select A/B/C
+    elif st.session_state.step == "ask_mockup_choice":
+        if user_input.upper() in ["1", "2", "3"]:
+            idx = ["1", "2", "3"].index(user_input.upper())
+            st.session_state.selected_mockup = idx
+
+            # Clean up uploaded images from Render backend
+            try:
+                requests.delete("https://mathmandala-upload.onrender.com/delete-all")
+            except Exception as e:
+                st.warning(f"⚠️ Cleanup error: {e}")
+            st.session_state.step = "ask_name"
+            st.chat_message("assistant").markdown("Great choice! What's your name?")
+        else:
+            st.chat_message("assistant").markdown("Please type 1, 2, or 3 to choose a style.")
+
+    # STEP 5: Ask Name
+    elif st.session_state.step == "ask_name":
+        st.session_state.name = user_input
+        st.session_state.step = "ask_phone"
+        st.chat_message("assistant").markdown("Thanks! Now please enter your WhatsApp number:")
+
+    # STEP 6: Ask Phone
+    elif st.session_state.step == "ask_phone":
+        st.session_state.phone = user_input
+        st.session_state.step = "done"
+        st.chat_message("assistant").markdown(f"✅ Order received!\n\nWe'll contact you at {st.session_state.phone}.")
+        st.balloons()
+
+# Final Step
+if st.session_state.step == "done":
+    st.markdown("🎉 Thank you! We'll be in touch.")
+    if st.button("🔁 Order again?"):
+        for key in ["step", "items", "size", "selected_mockup", "pattern_image_url", "user_input", "name", "phone", "mockup_urls"]:
+            st.session_state[key] = "" if isinstance(st.session_state.get(key), str) else []
+        st.session_state.step = "ask_item"
+        st.rerun()
