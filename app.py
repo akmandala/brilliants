@@ -48,7 +48,10 @@ if "pattern_image_url" not in st.session_state:
     st.session_state.pattern_image_url = ""
 
 st.title("👕 Brilliants.Boutique AI Assistant")
-
+with st.chat_message("assistant"):
+    st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white shirts, shorts, and hoodies with customizable heatpress prints.")
+    st.markdown("What can we help you with today?")
+    
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 
@@ -56,13 +59,10 @@ input_value = st.chat_input("Type your request")
 
 if input_value:
     st.session_state.user_input = input_value
-    st.rerun()
+    user_input = input_value
 
-if st.session_state.user_input:
     with st.chat_message("user"):
-        st.markdown(st.session_state.user_input)
-
-    user_input = st.session_state.user_input
+        st.markdown(user_input)
 
     # Step: Selecting items
     if st.session_state.step == "ask_item":
@@ -119,7 +119,6 @@ if st.session_state.user_input:
                             st.image(mockup_urls[i], caption=f"Option {i+1}")
                             if st.button(f"Select Option {i+1}"):
                                 st.session_state.selected_mockup = mockup_urls[i]
-                                st.session_state.step = "ask_contact"
 
                                 # Clean up uploaded images from Render backend
                                 try:
@@ -131,28 +130,19 @@ if st.session_state.user_input:
                                 except Exception as e:
                                     st.warning(f"⚠️ Cleanup error: {e}")
                                 
-                                st.rerun()  # rerun only after button
-                else:
-                    with st.chat_message("assistant"):
-                        st.markdown("⚠️ No image received. Please retry or refresh.")
-        else:
-            with st.chat_message("assistant"):
-                st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
+                                # --- Ask contact info inline ---
+                                with st.chat_message("assistant"):
+                                    st.markdown("📦 Please enter your details so we can follow up your order and send final confirmation:")
 
-# --- Step 5: Collect customer contact info ---
-elif st.session_state.step == "ask_contact":
-    with st.chat_message("assistant"):
-        st.markdown("📦 Please enter your details so we can follow up your order and send final confirmation:")
+                                with st.form("contact_form"):
+                                    name = st.text_input("Name")
+                                    email = st.text_input("Email")
+                                    phone = st.text_input("WhatsApp Number (e.g., +628123456789)")
+                                    address = st.text_area("Shipping Address")
+                                    submitted = st.form_submit_button("Submit Order")
 
-    with st.form("contact_form"):
-        name = st.text_input("Name")
-        email = st.text_input("Email")
-        phone = st.text_input("WhatsApp Number (e.g., +628123456789)")
-        address = st.text_area("Shipping Address")
-        submitted = st.form_submit_button("Submit Order")
-
-    if submitted:
-        full_summary = f"""
+                                if submitted:
+                                    full_summary = f"""
 New order from Brilliants.Boutique
 
 Name: {name}
@@ -165,10 +155,16 @@ Size: {st.session_state.size}
 Selected Design: {st.session_state.selected_mockup}
 """
 
-        st.success("✅ Order received and sent to hello@brilliants.boutique")
-        st.success("📲 A WhatsApp message will be sent shortly.")
-        st.balloons()
-        st.session_state.step = "done"
+                                    st.success("✅ Order received and sent to hello@brilliants.boutique")
+                                    st.success("📲 A WhatsApp message will be sent shortly.")
+                                    st.balloons()
+                                    st.session_state.step = "done"
+                else:
+                    with st.chat_message("assistant"):
+                        st.markdown("⚠️ No image received. Please retry or refresh.")
+        else:
+            with st.chat_message("assistant"):
+                st.markdown("❌ Please choose a valid size: XS, S, M, L, or XL.")
 
 # --- Done ---
 elif st.session_state.step == "done":
