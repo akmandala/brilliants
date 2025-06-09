@@ -11,6 +11,13 @@ EMAIL_STORE = "hello@brilliants.boutique"
 RENDER_UPLOADS_URL = "https://mathmandala-upload.onrender.com/uploads"
 RENDER_FILE_BASE = "https://mathmandala-upload.onrender.com/files"
 
+logo = Image.open("brilliants.png")
+col1, col2 = st.columns([1, 8])
+with col1:
+    st.image(logo, width=90)
+with col2:
+    st.markdown("<h1 style='padding-top: 10px;'>Brilliants Boutique</h1>", unsafe_allow_html=True)
+    
 # --- Helper: Download Latest File from Render ---
 def fetch_latest_image(prefix="brilliants_", timeout=60):
     start = time.time()
@@ -49,7 +56,6 @@ if "pattern_image_url" not in st.session_state:
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 
-st.title("👕 Brilliants.Boutique AI Assistant")
 st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white **shirts, shorts,** and **hoodies** with customizable heatpress prints.")
 
 # 👉 Initial assistant message
