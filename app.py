@@ -159,13 +159,13 @@ if st.session_state.user_input:
     elif st.session_state.step == "ask_name":
         st.session_state.name = user_input
         st.session_state.step = "ask_phone"
-        st.chat_message("assistant").markdown("Thanks! Now please enter your WhatsApp number:")
+        st.chat_message("assistant").markdown("Thanks {user_input}! Now please enter your WhatsApp number:")
 
     # STEP 6: Ask Phone
     elif st.session_state.step == "ask_phone":
         st.session_state.phone = user_input
         st.session_state.step = "done"
-        st.chat_message("assistant").markdown(f"✅ Order received!\n\nWe'll contact you at {st.session_state.phone}.")
+        st.chat_message("assistant").markdown(f"✅ Details received!\n\nWe'll contact you at {st.session_state.phone}.")
         st.balloons()
 
 # Final Step
