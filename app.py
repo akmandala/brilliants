@@ -50,7 +50,7 @@ if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 
 st.title("👕 Brilliants.Boutique AI Assistant")
-st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white shirts, shorts, and hoodies with customizable heatpress prints.")
+st.markdown("Hello 👋 Welcome to **Brilliants.Boutique**! We offer white **shirts, shorts,** and **hoodies** with customizable heatpress prints.")
 
 # 👉 Initial assistant message
 if st.session_state.step == "ask_item" and not st.session_state.user_input:
