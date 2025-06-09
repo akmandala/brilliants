@@ -159,7 +159,7 @@ if st.session_state.user_input:
     elif st.session_state.step == "ask_name":
         st.session_state.name = user_input
         st.session_state.step = "ask_phone"
-        st.chat_message("assistant").markdown("Thanks {user_input}! Now please enter your WhatsApp number:")
+        st.chat_message("assistant").markdown(f"Thanks {st.session_state.name}! Now please enter your WhatsApp number:")
 
     # STEP 6: Ask Phone
     elif st.session_state.step == "ask_phone":
