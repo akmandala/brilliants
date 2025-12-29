@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b5cff" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#00c2ff" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0b5cff"/>
+      <stop offset="1" stop-color="#00c2ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" rx="56" fill="white"/>
+  <rect x="40" y="40" width="1520" height="820" rx="48" fill="url(#bg)" stroke="#e7e8ee"/>
+  <g stroke="#0b0c0f" stroke-opacity="0.12" fill="none">
+    <path d="M160 640c160-160 260-40 420-200s260 20 420-140 260-20 440-180" stroke-width="10"/>
+    <path d="M160 700c180-180 290-30 460-210s270 10 430-150 260-10 410-160" stroke-width="6"/>
+  </g>
+  <g>
+    <rect x="120" y="140" width="560" height="160" rx="24" fill="white" stroke="#e7e8ee"/>
+    <rect x="120" y="340" width="720" height="220" rx="24" fill="white" stroke="#e7e8ee"/>
+    <rect x="120" y="600" width="430" height="140" rx="24" fill="white" stroke="#e7e8ee"/>
+    <rect x="740" y="140" width="740" height="600" rx="28" fill="white" stroke="#e7e8ee"/>
+    <path d="M180 220h320" stroke="url(#line)" stroke-width="10" stroke-linecap="round"/>
+    <path d="M180 420h480" stroke="#0b0c0f" stroke-opacity="0.18" stroke-width="10" stroke-linecap="round"/>
+    <path d="M180 470h400" stroke="#0b0c0f" stroke-opacity="0.14" stroke-width="10" stroke-linecap="round"/>
+    <path d="M180 650h280" stroke="#0b0c0f" stroke-opacity="0.18" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <text x="820" y="240" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" fill="#0b0c0f">Hero image placeholder</text>
+  <text x="820" y="300" font-family="Inter, Arial, sans-serif" font-size="22" fill="#5b5f6b">Replace with a clean PCB + enclosure photo</text>
+</svg>
