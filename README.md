@@ -26,7 +26,32 @@ This is a static multi-page website designed for Netlify hosting (Kickr-style la
    - Build command: _(leave blank)_
    - Publish directory: `.`
 
+## Quickest GitHub flow (no terminal)
+If your branch is already on GitHub, the fastest next step is just:
+1) Open your repo on GitHub.
+2) Click the black **Create pull request** button.
+3) Merge the PR after review.
+
+## Why changes may not appear on GitHub
+If an AI agent edits files in a cloud/container workspace, those commits exist only in that workspace until they are pushed to your GitHub repository.
+
+Use this checklist to make sure GitHub gets updated:
+1) Confirm you are inside your local cloned repo (not `C:\Users\<you>` root):
+   - `cd C:\Users\<you>\brilliant`
+   - `git status`
+2) Confirm remote is configured:
+   - `git remote -v`
+   - If missing: `git remote add origin https://github.com/akmandala/brilliant.git`
+3) Confirm which branch has commits:
+   - `git branch --show-current`
+   - `git log --oneline -n 5`
+4) Push that branch:
+   - `git push -u origin <branch-name>`
+
+If you made commits in a different environment, export/apply them with:
+- `git format-patch -1 <commit>` (from source repo)
+- `git am <patch-file>` (in your local repo), then push.
+
 ## Netlify Forms notes
 - Submissions will appear under **Site → Forms**.
 - You can enable email notifications inside Netlify settings.
-
