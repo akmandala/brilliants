@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Free Sketch → BoM + design notes | SketchCAD</title>
+  <meta name="description" content="Upload a sketch or paste a spec. Get a real-part BoM list + a short design instruction paragraph, selected from our Snippet Database." />
+  <meta name="theme-color" content="#0b0c0f" />
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta property="og:title" content="Free Sketch → BoM + design notes | SketchCAD" />
+  <meta property="og:description" content="Upload a sketch or paste a spec. Get a real-part BoM list + a short design instruction paragraph, selected from our Snippet Database." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/img/og-placeholder.png" />
+</head>
+<body>
+  <header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="/" aria-label="SketchCAD home">
+      <img src="/assets/img/sketchcad-logo.svg" alt="SketchCAD logo" />
+    </a>
+
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
+<a class="nav-link" href="/faq/">FAQ</a>
+      <a class="button button-primary" href="/sketch-to-bom/">Free: Sketch → BoM</a>
+    </nav>
+
+    <details class="nav-mobile">
+      <summary class="nav-mobile-summary" aria-label="Open menu">Menu</summary>
+      <div class="nav-mobile-panel" aria-label="Mobile navigation">
+        <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
+<a class="nav-link" href="/faq/">FAQ</a>
+        <a class="button button-primary" href="/sketch-to-bom/">Free: Sketch → BoM</a>
+      </div>
+    </details>
+  </div>
+</header>
+  <main>
+    
+<section class="hero">
+  <div class="container">
+    <p class="kicker">Free tool</p>
+    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">Free Sketch → BoM + design notes.</h1>
+    <p class="lede">Upload a sketch, block diagram, or short spec. We’ll return an automated Snippet Preview: a real-part BoM list plus a short design instruction paragraph describing wiring intent and key assumptions.</p>
+    <p class="small muted">Free auto-generation is limited to {DAILY_LIMIT} sketches per day (quota resets daily). If you hit the limit, try again later or use paid delivery for priority.</p>
+    <p class="small muted">The LLM does <strong>not</strong> generate circuits on the fly. It interprets your sketch/spec and selects Snippets from our engineer-curated database.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container grid-2">
+    <div>
+      <h2 class="h2">What you’ll get (free)</h2>
+      <ul class="ul">
+        <li>Real-part BoM list (MPNs + key parameters)</li>
+        <li>A short design instruction paragraph (typical wiring/topology intent)</li>
+        <li>Key assumptions captured from your sketch/spec</li>
+        <li>Suggested next blocks (what usually comes next in the system)</li>
+      </ul>
+
+      <h2 class="h2" style="margin-top:24px;">What’s paid (build-ready outputs)</h2>
+      <ul class="ul">
+        <li>Supplier-ready BoMs (e.g., LCSC cart-ready export, alternates management)</li>
+        <li>Part library from BoM (Altium symbols/footprints/3D)</li>
+        <li>Tailored Altium libraries (IPC/house standards, visual constraints)</li>
+        <li>Full schematic capture + PCB layout</li>
+      </ul>
+
+      <div class="hero-actions" style="margin-top:18px;">
+        <a class="button button-primary" href="/services/">Delivery options</a>
+        <a class="button" href="/contact/">Paid delivery inquiry</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Submit your sketch for the free preview</h3>
+      <p class="muted">Share a link or paste requirements. If you need build-ready outputs, use the paid inquiry form.</p>
+
+      <form class="form" name="free-snippet-preview" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thanks/">
+        <input type="hidden" name="form-name" value="free-snippet-preview" />
+        <p class="hidden">
+          <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+        </p>
+
+        <div class="form-row">
+          <div>
+            <label class="label" for="name">Name</label>
+            <input class="input" id="name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div>
+            <label class="label" for="email">Email</label>
+            <input class="input" id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+        </div>
+
+        <div>
+          <label class="label" for="sketch-link">Sketch link (URL)</label>
+          <input class="input" id="sketch-link" name="sketch-link" type="url" placeholder="https://..." />
+        </div>
+
+        <div style="margin-top:12px;">
+          <label class="label" for="requirements">Requirements / notes</label>
+          <textarea class="textarea" id="requirements" name="requirements" placeholder="Describe your sketch/spec, constraints, and goals." required></textarea>
+        </div>
+
+        <div style="margin-top:12px;">
+          <label class="label" for="domain">Domain</label>
+          <select class="select" id="domain" name="domain" required>
+            <option value="" selected disabled>Select one</option>
+            <option>Consumer</option>
+            <option>Industrial</option>
+            <option>Automotive</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <button class="button button-primary" type="submit" style="margin-top:14px;">Generate free BoM preview</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+  </main>
+  <footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="/assets/img/sketchcad-logo.svg" alt="SketchCAD logo" />
+        </div>
+        <p class="muted">BoM‑backed Hardware Snippets — selected from an engineer‑curated database, ready for design, calculation, and simulation.</p>
+      </div>
+
+      <div class="footer-nav">
+        <div class="footer-nav-col">
+          <div class="footer-nav-title">Explore</div>
+          <a href="/services/">Delivery</a>
+          <a href="/how-we-work/">How it works</a>
+          <a href="/work/">Examples</a>
+          <a href="/platform/">Snippet Database</a>
+        </div>
+        <div class="footer-nav-col">
+          <div class="footer-nav-title">Get in touch</div>
+          <a href="/contact/">Paid delivery inquiry</a>
+          <a href="mailto:you@yourdomain.com">you@yourdomain.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="small muted">© 2026 Your Studio. All rights reserved.</div>
+      <div class="small muted">Built for Netlify • Static site + Netlify Forms</div>
+    </div>
+  </div>
+</footer>
+  <script src="/assets/js/main.js" defer></script>
+</body>
+</html>
