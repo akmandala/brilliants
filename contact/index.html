@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contact • Your Studio</title>
-  <meta name="description" content="Send the sketch. We’ll send back a plan. Contact form powered by Netlify Forms." />
+  <title>Contact — Send a sketch/spec for a Snippet Pack</title>
+  <meta name="description" content="Send a sketch or spec. We’ll respond with a Snippet Pack plan: selected blocks, BoM structure, and library options." />
   <meta name="theme-color" content="#0b0c0f" />
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/assets/css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <meta property="og:title" content="Contact" />
-  <meta property="og:description" content="Send the sketch. We’ll send back a plan. Contact form powered by Netlify Forms." />
+  <meta property="og:title" content="Contact — Send a sketch/spec for a Snippet Pack" />
+  <meta property="og:description" content="Send a sketch or spec. We’ll respond with a Snippet Pack plan: selected blocks, BoM structure, and library options." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/assets/img/og-placeholder.png" />
 </head>
@@ -24,23 +24,23 @@
     </a>
 
     <nav class="nav-desktop" aria-label="Primary">
-      <a class="nav-link" href="/how-we-work/">How We Work</a>
-<a class="nav-link" href="/services/">Services</a>
-<a class="nav-link" href="/work/">Work</a>
-<a class="nav-link" href="/platform/">Platform</a>
+      <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
 <a class="nav-link" href="/faq/">FAQ</a>
-      <a class="button button-primary" href="/contact/">Start a project</a>
+      <a class="button button-primary" href="/contact/">Send a sketch</a>
     </nav>
 
     <details class="nav-mobile">
       <summary class="nav-mobile-summary" aria-label="Open menu">Menu</summary>
       <div class="nav-mobile-panel" aria-label="Mobile navigation">
-        <a class="nav-link" href="/how-we-work/">How We Work</a>
-<a class="nav-link" href="/services/">Services</a>
-<a class="nav-link" href="/work/">Work</a>
-<a class="nav-link" href="/platform/">Platform</a>
+        <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
 <a class="nav-link" href="/faq/">FAQ</a>
-        <a class="button button-primary" href="/contact/">Start a project</a>
+        <a class="button button-primary" href="/contact/">Send a sketch</a>
       </div>
     </details>
   </div>
@@ -50,8 +50,8 @@
 <section class="hero">
   <div class="container">
     <p class="kicker">Contact</p>
-    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">Send the sketch. We’ll send back a plan.</h1>
-    <p class="lede">Share whatever you have: a photo of a sketch, a block diagram, or an enclosure concept. Include constraints (size/power/cost/volume) and we’ll propose a practical path.</p>
+    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">Send a sketch or spec. We’ll return a Snippet Pack plan.</h1>
+    <p class="lede">Share whatever you have: a photo of a sketch, a block diagram, or a short requirements note. Include constraints (size/power/cost/volume) and key interfaces. We’ll reply with the recommended Snippets, the BoM structure, and library options.</p>
   </div>
 </section>
 
@@ -61,15 +61,25 @@
       <div>
         <h2 class="h2">What to include</h2>
         <ul class="ul">
-          <li>sketch/photo/block diagram</li>
-          <li>size constraints + power source</li>
-          <li>key interfaces (motors, sensors, cameras, RF/cellular, audio, etc.)</li>
-          <li>target quantities (prototype only vs scaling intent)</li>
-          <li>any platform preference (STM32 / RP2x / ESP32 / nRF / OSM / Raspberry Pi CM / cellular module)</li>
+          <li>sketch/photo/block diagram (a phone photo is fine)</li>
+          <li>power source + power budget</li>
+          <li>size / enclosure constraints (if known)</li>
+          <li>key interfaces (motors, sensors, cameras, RF/cellular, audio, storage, connectors)</li>
+          <li>environment (consumer/industrial/automotive, temperature range if relevant)</li>
+          <li>software constraints (bare metal/RTOS/Linux, preferred ecosystem if any)</li>
+          <li>target quantities and lifecycle expectations</li>
+        </ul>
+
+        <ul class="ul" style="margin-top:10px;">
+          <li><strong>If compute selection matters (camera/DSP/AI), include:</strong></li>
+          <li>camera count, resolution, frame rate, interface type (if known)</li>
+          <li>processing goal (encode/decode, DSP, AI inference), latency targets</li>
+          <li>memory/storage expectations (rough is fine)</li>
+          <li>power/thermal envelope</li>
         </ul>
 
         <div class="notice" style="margin-top:16px;">
-          <p><strong>Tip:</strong> If you’re not sure about constraints yet, just send the goal and the sketch. We’ll help define the rest.</p>
+          <p><strong>Tip:</strong> If you’re unsure about constraints, send the goal + sketch. We’ll help structure the requirements.</p>
         </div>
 
         <p class="small muted" style="margin-top:18px;">
@@ -107,10 +117,12 @@
               <label class="label" for="stage">Project stage</label>
               <select class="select" id="stage" name="stage" required>
                 <option value="" selected disabled>Select one</option>
-                <option>Idea / Sketch</option>
-                <option>Prototype redesign / Rev B</option>
-                <option>Pre-production / DfM</option>
-                <option>Library cleanup / Altium 365</option>
+                <option>Snippet selection only</option>
+                <option>Snippet Pack + engineer review</option>
+                <option>Compute/processor selection</option>
+                <option>Custom Altium Part Library</option>
+                <option>Library audit / cleanup (Altium 365)</option>
+                <option>Other</option>
               </select>
             </div>
           </div>
@@ -137,27 +149,27 @@
         <div class="footer-logo">
           <img src="/assets/img/sketchcad-logo.svg" alt="SketchCAD logo" />
         </div>
-        <p class="muted">Electronics + mechanical product development — from sketch to prototype‑ready design, with production discipline.</p>
+        <p class="muted">BoM‑backed Hardware Snippets — selected from an engineer‑curated database, ready for design, calculation, and simulation.</p>
       </div>
 
       <div class="footer-nav">
         <div class="footer-nav-col">
           <div class="footer-nav-title">Explore</div>
-          <a href="/services/">Services</a>
-          <a href="/how-we-work/">How we work</a>
-          <a href="/work/">Work</a>
-          <a href="/platform/">Platform</a>
+          <a href="/services/">Delivery</a>
+          <a href="/how-we-work/">How it works</a>
+          <a href="/work/">Examples</a>
+          <a href="/platform/">Snippet Database</a>
         </div>
         <div class="footer-nav-col">
           <div class="footer-nav-title">Get in touch</div>
-          <a href="/contact/">Start a project</a>
+          <a href="/contact/">Send a sketch</a>
           <a href="mailto:you@yourdomain.com">you@yourdomain.com</a>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div class="small muted">© 2025 Your Studio. All rights reserved.</div>
+      <div class="small muted">© 2026 Your Studio. All rights reserved.</div>
       <div class="small muted">Built for Netlify • Static site + Netlify Forms</div>
     </div>
   </div>

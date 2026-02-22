@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FAQ • Your Studio</title>
-  <meta name="description" content="Frequently asked questions about our hardware design services, simulation and derating, and library management." />
+  <title>FAQ — Snippet Database and library delivery</title>
+  <meta name="description" content="Answers about Snippet Packs, compute selection, and Altium part libraries." />
   <meta name="theme-color" content="#0b0c0f" />
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/assets/css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <meta property="og:title" content="FAQ" />
-  <meta property="og:description" content="Frequently asked questions about our hardware design services, simulation and derating, and library management." />
+  <meta property="og:title" content="FAQ — Snippet Database and library delivery" />
+  <meta property="og:description" content="Answers about Snippet Packs, compute selection, and Altium part libraries." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/assets/img/og-placeholder.png" />
 </head>
@@ -24,23 +24,23 @@
     </a>
 
     <nav class="nav-desktop" aria-label="Primary">
-      <a class="nav-link" href="/how-we-work/">How We Work</a>
-<a class="nav-link" href="/services/">Services</a>
-<a class="nav-link" href="/work/">Work</a>
-<a class="nav-link" href="/platform/">Platform</a>
+      <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
 <a class="nav-link is-active" href="/faq/">FAQ</a>
-      <a class="button button-primary" href="/contact/">Start a project</a>
+      <a class="button button-primary" href="/contact/">Send a sketch</a>
     </nav>
 
     <details class="nav-mobile">
       <summary class="nav-mobile-summary" aria-label="Open menu">Menu</summary>
       <div class="nav-mobile-panel" aria-label="Mobile navigation">
-        <a class="nav-link" href="/how-we-work/">How We Work</a>
-<a class="nav-link" href="/services/">Services</a>
-<a class="nav-link" href="/work/">Work</a>
-<a class="nav-link" href="/platform/">Platform</a>
+        <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
 <a class="nav-link" href="/faq/">FAQ</a>
-        <a class="button button-primary" href="/contact/">Start a project</a>
+        <a class="button button-primary" href="/contact/">Send a sketch</a>
       </div>
     </details>
   </div>
@@ -50,10 +50,10 @@
 <section class="hero">
   <div class="container">
     <p class="kicker">FAQ</p>
-    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">Fast answers.</h1>
+    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">FAQ — Snippets, selection, and libraries.</h1>
     <p class="lede">If you don’t see your question here, send a note — we’ll respond with the practical answer.</p>
     <div class="hero-actions" style="margin-top:18px;">
-      <a class="button button-primary" href="/contact/">Contact</a>
+      <a class="button button-primary" href="/contact/">Send a sketch</a>
     </div>
   </div>
 </section>
@@ -63,40 +63,45 @@
     <div class="grid-2">
       <div class="card">
         <h3>Can I start with just a sketch?</h3>
-        <p>Yes. A sketch + constraints is enough to start.</p>
+        <p>Yes. A sketch + constraints is enough to generate a Snippet Pack.</p>
+      </div>
+
+      <div class="card">
+        <h3>Does the LLM generate circuits?</h3>
+        <p>No. Snippets are stored in our database. The LLM only interprets your sketch/spec and selects the best-fit Snippets. Nothing is generated on the fly.</p>
+      </div>
+
+      <div class="card">
+        <h3>Can you select an MCU or processor Snippet too?</h3>
+        <p>Yes. We infer requirements (interfaces, camera needs, AI/DSP workload, memory, power envelope, OS/software constraints) and rank compute Snippets from the database. The selection includes companion blocks like PMIC rails, clocks, boot storage, and interface protection.</p>
       </div>
 
       <div class="card">
         <h3>Do you do simulation and derating?</h3>
-        <p>Yes — especially for power, drivers, and hot spots where margin matters.</p>
+        <p>Where it matters. Snippets include assumptions, constraints, and calculation/derating notes; simulation hooks are included when applicable.</p>
       </div>
 
       <div class="card">
-        <h3>Do you build prototypes?</h3>
-        <p>We deliver prototype‑ready design packages and can support prototype builds via partners (e.g., CircuitHub or JLCPCB) or your preferred manufacturer.</p>
-      </div>
-
-      <div class="card">
-        <h3>Can you help us find an OEM/ODM partner?</h3>
-        <p>Yes — we help package requirements, answer vendor questions, and support handoff.</p>
-      </div>
-
-      <div class="card">
-        <h3>Do you manage Altium 365 libraries?</h3>
-        <p>Yes — including standards, 3D, assembly layers, courtyard strategy, and governance.</p>
+        <h3>Where do the symbols/footprints come from?</h3>
+        <p>You can build your collection from sources such as SnapEDA, Ultra Librarian, and SamacSys, or commission a tailored Altium library built to IPC/house standards.</p>
       </div>
 
       <div class="card">
         <h3>What files will we get?</h3>
-        <p>Typically: Altium project, fabrication outputs, assembly outputs, BoM, notes, and enclosure STEP (when mechanical is in scope).</p>
+        <p>Typically: Snippet Pack documentation, BoM exports, and part-library outputs (links or delivered libraries). If requested: Altium project structures and manufacturing-ready exports.</p>
+      </div>
+
+      <div class="card">
+        <h3>Can you keep our design confidential?</h3>
+        <p>Yes. Share only what’s necessary; we can work with high-level specs and interfaces first.</p>
       </div>
     </div>
 
     <div class="callout" style="margin-top:24px;">
-      <p><strong>Ready to start?</strong> Send your sketch and constraints. We’ll reply with a scoped plan and next steps.</p>
+      <p><strong>Ready to start?</strong> Send your sketch/spec and constraints. We’ll reply with the right Snippet and delivery path.</p>
       <div class="actions">
-        <a class="button button-primary" href="/contact/">Start a project</a>
-        <a class="button" href="/services/">View services</a>
+        <a class="button button-primary" href="/contact/">Send a sketch</a>
+        <a class="button" href="/services/">Delivery options</a>
       </div>
     </div>
   </div>
@@ -110,27 +115,27 @@
         <div class="footer-logo">
           <img src="/assets/img/sketchcad-logo.svg" alt="SketchCAD logo" />
         </div>
-        <p class="muted">Electronics + mechanical product development — from sketch to prototype‑ready design, with production discipline.</p>
+        <p class="muted">BoM‑backed Hardware Snippets — selected from an engineer‑curated database, ready for design, calculation, and simulation.</p>
       </div>
 
       <div class="footer-nav">
         <div class="footer-nav-col">
           <div class="footer-nav-title">Explore</div>
-          <a href="/services/">Services</a>
-          <a href="/how-we-work/">How we work</a>
-          <a href="/work/">Work</a>
-          <a href="/platform/">Platform</a>
+          <a href="/services/">Delivery</a>
+          <a href="/how-we-work/">How it works</a>
+          <a href="/work/">Examples</a>
+          <a href="/platform/">Snippet Database</a>
         </div>
         <div class="footer-nav-col">
           <div class="footer-nav-title">Get in touch</div>
-          <a href="/contact/">Start a project</a>
+          <a href="/contact/">Send a sketch</a>
           <a href="mailto:you@yourdomain.com">you@yourdomain.com</a>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div class="small muted">© 2025 Your Studio. All rights reserved.</div>
+      <div class="small muted">© 2026 Your Studio. All rights reserved.</div>
       <div class="small muted">Built for Netlify • Static site + Netlify Forms</div>
     </div>
   </div>
