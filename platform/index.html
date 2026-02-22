@@ -3,42 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Platform • Your Studio</title>
-  <meta name="description" content="A modular platform vision for turning sketches into efficient, buildable designs." />
+  <title>Snippet Database — How SketchCAD stores reusable hardware intelligence</title>
+  <meta name="description" content="A database of BoM‑anchored hardware design blocks. LLM interprets your sketch/spec and selects curated Snippets; nothing is generated from scratch." />
   <meta name="theme-color" content="#0b0c0f" />
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/assets/css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <meta property="og:title" content="Platform" />
-  <meta property="og:description" content="A modular platform vision for turning sketches into efficient, buildable designs." />
+  <meta property="og:title" content="Snippet Database — How SketchCAD stores reusable hardware intelligence" />
+  <meta property="og:description" content="A database of BoM‑anchored hardware design blocks. LLM interprets your sketch/spec and selects curated Snippets; nothing is generated from scratch." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/assets/img/og-placeholder.png" />
 </head>
 <body>
   <header class="site-header">
   <div class="container header-inner">
-    <a class="logo" href="/">Your Studio</a>
+    <a class="logo" href="/" aria-label="SketchCAD home">
+      <img src="/assets/img/sketchcad-logo.svg" alt="SketchCAD logo" />
+    </a>
 
     <nav class="nav-desktop" aria-label="Primary">
-      <a class="nav-link" href="/how-we-work/">How We Work</a>
-<a class="nav-link" href="/services/">Services</a>
-<a class="nav-link" href="/work/">Work</a>
-<a class="nav-link is-active" href="/platform/">Platform</a>
+      <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link is-active" href="/platform/">Snippet Database</a>
 <a class="nav-link" href="/faq/">FAQ</a>
-      <a class="button button-primary" href="/contact/">Start a project</a>
+      <a class="button button-primary" href="/contact/">Send a sketch</a>
     </nav>
 
     <details class="nav-mobile">
       <summary class="nav-mobile-summary" aria-label="Open menu">Menu</summary>
       <div class="nav-mobile-panel" aria-label="Mobile navigation">
-        <a class="nav-link" href="/how-we-work/">How We Work</a>
-<a class="nav-link" href="/services/">Services</a>
-<a class="nav-link" href="/work/">Work</a>
-<a class="nav-link" href="/platform/">Platform</a>
+        <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
 <a class="nav-link" href="/faq/">FAQ</a>
-        <a class="button button-primary" href="/contact/">Start a project</a>
+        <a class="button button-primary" href="/contact/">Send a sketch</a>
       </div>
     </details>
   </div>
@@ -47,12 +49,12 @@
     
 <section class="hero">
   <div class="container">
-    <p class="kicker">Platform</p>
-    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">A modular platform for turning sketches into efficient designs.</h1>
-    <p class="lede">We’re building a workflow and reusable building blocks so projects move faster without sacrificing engineering discipline.</p>
+    <p class="kicker">Snippet Database</p>
+    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">A Snippet Database for turning sketches into buildable hardware.</h1>
+    <p class="lede">Hardware Snippets are reusable design blocks stored with a real BoM, clear wiring intent, and library-ready part mappings. The LLM reads your sketch/spec, infers requirements, and selects the best-fit Snippets from the database — it does not generate circuits on the fly.</p>
     <div class="hero-actions" style="margin-top:18px;">
-      <a class="button button-primary" href="/contact/">Start a project</a>
-      <a class="button" href="/services/">Use the service track</a>
+      <a class="button button-primary" href="/contact/">Send a sketch</a>
+      <a class="button" href="/services/">Delivery options</a>
     </div>
   </div>
 </section>
@@ -60,30 +62,39 @@
 <section class="section">
   <div class="container grid-2">
     <div>
-      <h2 class="h2">What the platform focuses on</h2>
+      <h2 class="h2">What a Hardware Snippet contains</h2>
       <ul class="ul">
-        <li>Compute strategy selection (MCU vs module vs smart module)</li>
-        <li>Power tree definition + proven blocks</li>
-        <li>Motor/analog integration patterns</li>
-        <li>Library‑first discipline for reliable assembly</li>
-        <li>Early mechanical constraints (sketch → STEP workflow)</li>
+        <li>Real BoM: MPNs, key params, alternates (when available), lifecycle/supply notes</li>
+        <li>Wiring intent: how the block connects in the schematic (topology + boundaries)</li>
+        <li>Constraints + calculations: assumptions, margins, derating where it matters</li>
+        <li>Simulation hooks: ready-to-run starting points when applicable</li>
+        <li>Part library mapping: symbols/footprints/3D links or delivered Altium libraries</li>
       </ul>
+      <p>That structure is what makes Snippets reusable — and what makes selection reliable.</p>
 
+      <h2 class="h2" style="margin-top:28px;">Compute selection is first-class</h2>
+      <p>Selecting a sensor or a regulator is often straightforward. Selecting the right MCU/processor is not. Our database stores compute Snippets with the surrounding system blocks already defined, so selection includes what actually makes the design work.</p>
+      <ul class="ul">
+        <li>MCU Snippets: power + clocks + debug + interfaces</li>
+        <li>Processor/SoM Snippets: PMIC/rails + DDR + boot storage + high-speed I/O</li>
+        <li>Camera/vision paths: interface patterns + constraints (where relevant)</li>
+        <li>Companion blocks: ESD/EMI, connectors, filtering, safety/protection patterns</li>
+      </ul>
       <div class="notice" style="margin-top:16px;">
-        <p><strong>Status:</strong> in development. <strong>Today:</strong> available through our design services — you get the benefits immediately.</p>
+        <p><strong>Status:</strong> database + assisted selection available now. Productised UI/API in progress.</p>
       </div>
     </div>
 
     <div class="card">
-      <h3>Why we’re building it</h3>
-      <p>Real hardware needs real decisions. The platform is about speed with correctness: repeatable building blocks, documented tradeoffs, and fewer re-spins.</p>
+      <h3>Why database-first wins</h3>
       <ul class="ul">
-        <li>Reduce rework by capturing constraints early</li>
-        <li>Standardize proven circuits and library quality</li>
-        <li>Make each revision faster than the last</li>
+        <li>Faster starts: reuse validated blocks instead of rewriting the same circuits</li>
+        <li>Fewer respins: assumptions and constraints are explicit</li>
+        <li>Better handoff: BoM + library mapping reduces assembly ambiguity</li>
+        <li>Better decisions: compute choices are justified, not guessed</li>
       </ul>
       <div class="hero-actions" style="margin-top:16px;">
-        <a class="button button-primary" href="/contact/">Talk to us</a>
+        <a class="button button-primary" href="/contact/">Send a sketch</a>
       </div>
     </div>
   </div>
@@ -94,28 +105,30 @@
   <div class="container footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
-        <div class="footer-logo">Your Studio</div>
-        <p class="muted">Electronics + mechanical product development — from sketch to prototype‑ready design, with production discipline.</p>
+        <div class="footer-logo">
+          <img src="/assets/img/sketchcad-logo.svg" alt="SketchCAD logo" />
+        </div>
+        <p class="muted">BoM‑backed Hardware Snippets — selected from an engineer‑curated database, ready for design, calculation, and simulation.</p>
       </div>
 
       <div class="footer-nav">
         <div class="footer-nav-col">
           <div class="footer-nav-title">Explore</div>
-          <a href="/services/">Services</a>
-          <a href="/how-we-work/">How we work</a>
-          <a href="/work/">Work</a>
-          <a href="/platform/">Platform</a>
+          <a href="/services/">Delivery</a>
+          <a href="/how-we-work/">How it works</a>
+          <a href="/work/">Examples</a>
+          <a href="/platform/">Snippet Database</a>
         </div>
         <div class="footer-nav-col">
           <div class="footer-nav-title">Get in touch</div>
-          <a href="/contact/">Start a project</a>
+          <a href="/contact/">Send a sketch</a>
           <a href="mailto:you@yourdomain.com">you@yourdomain.com</a>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div class="small muted">© 2025 Your Studio. All rights reserved.</div>
+      <div class="small muted">© 2026 Your Studio. All rights reserved.</div>
       <div class="small muted">Built for Netlify • Static site + Netlify Forms</div>
     </div>
   </div>
