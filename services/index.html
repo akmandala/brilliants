@@ -3,42 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Services • Your Studio</title>
-  <meta name="description" content="Engineering services built for prototype and production: sketch-to-prototype, electronics, power, motor, analog, mechanical, DfM/DfT, and libraries." />
+  <title>Delivery — Snippet Packs and Altium Part Libraries</title>
+  <meta name="description" content="Get a curated Snippet Pack from your sketch/spec, or commission production-grade Altium libraries built to IPC/house standards." />
   <meta name="theme-color" content="#0b0c0f" />
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/assets/css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <meta property="og:title" content="Services" />
-  <meta property="og:description" content="Engineering services built for prototype and production: sketch-to-prototype, electronics, power, motor, analog, mechanical, DfM/DfT, and libraries." />
+  <meta property="og:title" content="Delivery — Snippet Packs and Altium Part Libraries" />
+  <meta property="og:description" content="Get a curated Snippet Pack from your sketch/spec, or commission production-grade Altium libraries built to IPC/house standards." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/assets/img/og-placeholder.png" />
 </head>
 <body>
   <header class="site-header">
   <div class="container header-inner">
-    <a class="logo" href="/">Your Studio</a>
+    <a class="logo" href="/" aria-label="SketchCAD home">
+      <img src="/assets/img/sketchcad-logo.svg" alt="SketchCAD logo" />
+    </a>
 
     <nav class="nav-desktop" aria-label="Primary">
-      <a class="nav-link" href="/how-we-work/">How We Work</a>
-<a class="nav-link is-active" href="/services/">Services</a>
-<a class="nav-link" href="/work/">Work</a>
-<a class="nav-link" href="/platform/">Platform</a>
+      <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link is-active" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
 <a class="nav-link" href="/faq/">FAQ</a>
-      <a class="button button-primary" href="/contact/">Start a project</a>
+      <a class="button button-primary" href="/sketch-to-bom/">Free: Sketch → BoM</a>
     </nav>
 
     <details class="nav-mobile">
       <summary class="nav-mobile-summary" aria-label="Open menu">Menu</summary>
       <div class="nav-mobile-panel" aria-label="Mobile navigation">
-        <a class="nav-link" href="/how-we-work/">How We Work</a>
-<a class="nav-link" href="/services/">Services</a>
-<a class="nav-link" href="/work/">Work</a>
-<a class="nav-link" href="/platform/">Platform</a>
+        <a class="nav-link" href="/how-we-work/">How it works</a>
+<a class="nav-link" href="/services/">Delivery</a>
+<a class="nav-link" href="/work/">Examples</a>
+<a class="nav-link" href="/platform/">Snippet Database</a>
 <a class="nav-link" href="/faq/">FAQ</a>
-        <a class="button button-primary" href="/contact/">Start a project</a>
+        <a class="button button-primary" href="/sketch-to-bom/">Free: Sketch → BoM</a>
       </div>
     </details>
   </div>
@@ -47,12 +49,13 @@
     
 <section class="hero">
   <div class="container">
-    <p class="kicker">Services</p>
-    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">Engineering services built for prototype and production.</h1>
-    <p class="lede">Pick a focused engagement or run end‑to‑end from sketch to prototype‑ready.</p>
+    <p class="kicker">Delivery</p>
+    <h1 class="h2" style="font-size:clamp(2.2rem,4.2vw,3.5rem);margin-top:10px;">Paid delivery: supplier BoMs, part libraries, schematic & PCB.</h1>
+    <p class="lede">Start free with <strong>Sketch → BoM + design notes</strong>. When you need build-ready outputs, we deliver supplier-formatted BoMs (e.g., LCSC), part libraries from BoM, and full schematic + PCB.</p>
+    <p class="small muted">Free auto-generation is limited to {DAILY_LIMIT} sketches per day.</p>
     <div class="hero-actions" style="margin-top:18px;">
-      <a class="button button-primary" href="/contact/">Contact for a scope proposal</a>
-      <a class="button" href="/how-we-work/">How we work</a>
+      <a class="button button-primary" href="/sketch-to-bom/">Generate free BoM + design notes</a>
+      <a class="button" href="/contact/">Paid delivery inquiry</a>
     </div>
   </div>
 </section>
@@ -61,55 +64,38 @@
   <div class="container">
     <div class="grid-2">
       <div class="card">
-        <h3><a href="/services/sketch-to-prototype/">Sketch‑to‑Prototype Development</a></h3>
-        <p>From sketch → schematic → PCB → enclosure STEP → prototype handoff.</p>
-        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> founders, small teams, new product concepts.</p>
+        <h3>Supplier-ready BoM export (LCSC / vendor formats)</h3>
+        <p>Convert the selected Snippet BoM into supplier-ready formats (e.g., LCSC cart-ready exports), including alternates where appropriate.</p>
+        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> purchasing, quick quoting, build planning.</p>
       </div>
       <div class="card">
-        <h3><a href="/services/electronics-design/">Electronics Design (Schematic + PCB)</a></h3>
-        <p>MCU/module integration, mixed‑signal partitioning, DfM‑aware layout.</p>
-        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> teams that need a board designed right the first time.</p>
-      </div>
-
-      <div class="card">
-        <h3><a href="/services/power-management/">Power Management</a></h3>
-        <p>Buck/boost/flyback, power tree planning, protection, thermal/efficiency discipline.</p>
-        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> battery devices, compact designs, higher currents.</p>
-      </div>
-      <div class="card">
-        <h3><a href="/services/motor-control/">Motor Control</a></h3>
-        <p>BLDC/stepper drive stages, sensing, protection, switching layout discipline.</p>
-        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> robotics, motion products, actuators.</p>
+        <h3>Part Library from BoM (Altium-ready)</h3>
+        <p>Generate symbols/footprints/3D mappings from your BoM using sources like SnapEDA/Ultra Librarian/SamacSys, then normalise naming, parameters, and alignment.</p>
+        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> clean schematic capture and consistent assembly outputs.</p>
       </div>
 
       <div class="card">
-        <h3><a href="/services/analog-front-ends/">Analog Front Ends</a></h3>
-        <p>Amplifiers, active filters, sensor preconditioning, audio stages.</p>
-        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> sensor‑heavy devices, measurement, audio paths.</p>
+        <h3>Tailored Altium Part Library (IPC / house rules)</h3>
+        <p>Commission a production-grade library built to your standards: IPC courtyards, symbol visual constraints (colour, pin length/spacing), and high-density footprint optimisation.</p>
+        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> teams standardising releases.</p>
       </div>
       <div class="card">
-        <h3><a href="/services/mechanical-enclosure/">Mechanical + Enclosure (Sketch → STEP)</a></h3>
-        <p>Enclosure CAD aligned to PCB mounting, connector access, assembly strategy.</p>
-        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> handheld products, compact devices, connector‑dense builds.</p>
+        <h3>Schematic + PCB delivery</h3>
+        <p>Turn the Snippet plan into a complete schematic and PCB layout, ready for prototype and manufacturing handoff.</p>
+        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> teams who want a buildable first revision quickly.</p>
       </div>
 
       <div class="card">
-        <h3><a href="/services/dfm-dft-oem-odm/">DfM/DfT + OEM/ODM Support</a></h3>
-        <p>Test points, bring‑up planning, documentation, vendor‑facing handoff support.</p>
-        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> teams moving toward pilot builds.</p>
-      </div>
-      <div class="card">
-        <h3><a href="/services/library-management/">Altium 365 Library Management</a></h3>
-        <p>Precision footprints + 3D + assembly layers + courtyard standards + governance.</p>
-        <p class="small muted" style="margin-top:10px;"><strong>Best for:</strong> teams shipping boards, scaling volume, standardizing process.</p>
+        <h3>Library Audit + Governance (Altium 365)</h3>
+        <p>Audit an existing library for footprint risk, assembly ambiguity, and consistency; define rules so it stays clean as the team grows.</p>
       </div>
     </div>
 
     <div class="callout" style="margin-top:24px;">
-      <p><strong>Not sure where to start?</strong> Send a sketch + constraints. We’ll recommend the fastest path and the first deliverables.</p>
+      <p><strong>Not sure what’s needed?</strong> Start free. If the preview is close but you need build-ready outputs, we’ll propose the paid delivery scope.</p>
       <div class="actions">
-        <a class="button button-primary" href="/contact/">Start a project</a>
-        <a class="button" href="/faq/">FAQ</a>
+        <a class="button button-primary" href="/contact/">Paid delivery inquiry</a>
+        <a class="button" href="/sketch-to-bom/">Generate free BoM + design notes</a>
       </div>
     </div>
   </div>
@@ -120,28 +106,30 @@
   <div class="container footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
-        <div class="footer-logo">Your Studio</div>
-        <p class="muted">Electronics + mechanical product development — from sketch to prototype‑ready design, with production discipline.</p>
+        <div class="footer-logo">
+          <img src="/assets/img/sketchcad-logo.svg" alt="SketchCAD logo" />
+        </div>
+        <p class="muted">BoM‑backed Hardware Snippets — selected from an engineer‑curated database, ready for design, calculation, and simulation.</p>
       </div>
 
       <div class="footer-nav">
         <div class="footer-nav-col">
           <div class="footer-nav-title">Explore</div>
-          <a href="/services/">Services</a>
-          <a href="/how-we-work/">How we work</a>
-          <a href="/work/">Work</a>
-          <a href="/platform/">Platform</a>
+          <a href="/services/">Delivery</a>
+          <a href="/how-we-work/">How it works</a>
+          <a href="/work/">Examples</a>
+          <a href="/platform/">Snippet Database</a>
         </div>
         <div class="footer-nav-col">
           <div class="footer-nav-title">Get in touch</div>
-          <a href="/contact/">Start a project</a>
+          <a href="/contact/">Paid delivery inquiry</a>
           <a href="mailto:you@yourdomain.com">you@yourdomain.com</a>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div class="small muted">© 2025 Your Studio. All rights reserved.</div>
+      <div class="small muted">© 2026 Your Studio. All rights reserved.</div>
       <div class="small muted">Built for Netlify • Static site + Netlify Forms</div>
     </div>
   </div>
