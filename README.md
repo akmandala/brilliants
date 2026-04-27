@@ -17,6 +17,7 @@ Production-oriented Netlify + React workspace for automated component parsing an
 npm install
 npm run dev
 npm run build
+npm run typecheck
 npm run test
 ```
 

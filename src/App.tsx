@@ -15,6 +15,10 @@ export default function App() {
   useEffect(() => saveWorkspace(workspace), [workspace]);
 
   const selectedChat = useMemo(() => (workspace.selectedChatId ? workspace.chats[workspace.selectedChatId] : undefined), [workspace]);
+  const selectedProject = useMemo(
+    () => (workspace.selectedProjectId ? workspace.projects[workspace.selectedProjectId] : undefined),
+    [workspace]
+  );
 
   const parse = async (input: ParserInput, setStatus: (s: string) => void) => {
     if (!workspace.selectedChatId) return;
@@ -59,32 +63,60 @@ export default function App() {
     <div className="flex h-screen">
       <Sidebar
         workspace={workspace}
-        onSelectProject={(id) => setWorkspace((w) => ({ ...w, selectedProjectId: id, selectedChatId: w.projects[id].chatIds[0] }))}
+        onSelectProject={(id) =>
+          setWorkspace((w) => {
+            const project = w.projects[id];
+            if (!project) return w;
+            return { ...w, selectedProjectId: id, selectedChatId: project.chatIds[0] };
+          })
+        }
         onSelectChat={(id) => setWorkspace((w) => ({ ...w, selectedChatId: id }))}
         onCreateProject={() => setWorkspace((w) => addProject({ ...w }))}
-        onCreateChat={() => workspace.selectedProjectId && setWorkspace((w) => addChat({ ...w }, workspace.selectedProjectId!))}
-        onRenameProject={(id, name) => setWorkspace((w) => ({ ...w, projects: { ...w.projects, [id]: { ...w.projects[id], name } } }))}
-        onRenameChat={(id, name) => setWorkspace((w) => ({ ...w, chats: { ...w.chats, [id]: { ...w.chats[id], name } } }))}
-        onDeleteProject={(id) => setWorkspace((w) => {
-          const next = { ...w, projects: { ...w.projects }, chats: { ...w.chats } };
-          const project = next.projects[id];
-          project.chatIds.forEach((cid) => delete next.chats[cid]);
-          delete next.projects[id];
-          if (!Object.keys(next.projects).length) return createDefaultWorkspace();
-          next.selectedProjectId = Object.keys(next.projects)[0];
-          next.selectedChatId = next.projects[next.selectedProjectId].chatIds[0];
-          return next;
-        })}
-        onDeleteChat={(id) => setWorkspace((w) => {
-          if (!w.selectedProjectId) return w;
-          const next = { ...w, projects: { ...w.projects }, chats: { ...w.chats } };
-          const p = next.projects[w.selectedProjectId];
-          p.chatIds = p.chatIds.filter((cid) => cid !== id);
-          delete next.chats[id];
-          if (p.chatIds.length === 0) return addChat(next, p.id, 'Chat 1');
-          next.selectedChatId = p.chatIds[0];
-          return next;
-        })}
+        onCreateChat={() => selectedProject && setWorkspace((w) => addChat({ ...w }, selectedProject.id))}
+        onRenameProject={(id, name) =>
+          setWorkspace((w) => {
+            const project = w.projects[id];
+            if (!project) return w;
+            return { ...w, projects: { ...w.projects, [id]: { ...project, name } } };
+          })
+        }
+        onRenameChat={(id, name) =>
+          setWorkspace((w) => {
+            const chat = w.chats[id];
+            if (!chat) return w;
+            return { ...w, chats: { ...w.chats, [id]: { ...chat, name } } };
+          })
+        }
+        onDeleteProject={(id) =>
+          setWorkspace((w) => {
+            const next = { ...w, projects: { ...w.projects }, chats: { ...w.chats } };
+            const project = next.projects[id];
+            if (!project) return w;
+            project.chatIds.forEach((cid) => delete next.chats[cid]);
+            delete next.projects[id];
+            const remainingProjectIds = Object.keys(next.projects);
+            if (!remainingProjectIds.length) return createDefaultWorkspace();
+            const firstProjectId = remainingProjectIds[0];
+            if (!firstProjectId) return createDefaultWorkspace();
+            const firstProject = next.projects[firstProjectId];
+            next.selectedProjectId = firstProjectId;
+            next.selectedChatId = firstProject?.chatIds[0];
+            return next;
+          })
+        }
+        onDeleteChat={(id) =>
+          setWorkspace((w) => {
+            if (!w.selectedProjectId) return w;
+            const next = { ...w, projects: { ...w.projects }, chats: { ...w.chats } };
+            const project = next.projects[w.selectedProjectId];
+            if (!project) return w;
+            project.chatIds = project.chatIds.filter((cid) => cid !== id);
+            delete next.chats[id];
+            if (project.chatIds.length === 0) return addChat(next, project.id, 'Chat 1');
+            next.selectedChatId = project.chatIds[0];
+            return next;
+          })
+        }
         onExport={() => {
           const blob = new Blob([exportWorkspace(workspace)], { type: 'application/json' });
           const a = document.createElement('a');

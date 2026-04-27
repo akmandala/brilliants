@@ -1,5 +1,10 @@
 export const formatDecimalToken = (value: number): string =>
-  value.toString().replace('.', 'P').replace(/P0+$/, 'P0').replace(/(P\d*?)0+$/, '$1');
+  value
+    .toString()
+    .replace('.', 'P')
+    .replace(/^0P/, 'P')
+    .replace(/P0+$/, 'P0')
+    .replace(/(P\d*?)0+$/, '$1');
 
 export const encodeDimension = (length: number, width: number, height?: number): string => {
   const lw = `${formatDecimalToken(length)}X${formatDecimalToken(width)}`;

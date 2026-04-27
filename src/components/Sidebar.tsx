@@ -36,6 +36,7 @@ export default function Sidebar(props: Props) {
       <div className="space-y-1 overflow-auto">
         {project?.chatIds.map((chatId) => {
           const chat = props.workspace.chats[chatId];
+          if (!chat) return null;
           return (
             <div key={chat.id} className={`rounded p-2 ${chat.id === props.workspace.selectedChatId ? 'bg-zinc-200 dark:bg-zinc-800' : ''}`}>
               <div className="flex items-center gap-1">

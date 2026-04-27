@@ -53,9 +53,11 @@ export const addProject = (workspace: Workspace, name = 'New Project'): Workspac
 
 export const addChat = (workspace: Workspace, projectId: string, name = 'New Chat'): Workspace => {
   const id = uuid();
+  const project = workspace.projects[projectId];
+  if (!project) return workspace;
   workspace.chats[id] = { id, projectId, name, createdAt: now(), updatedAt: now(), messages: [] };
-  workspace.projects[projectId].chatIds.push(id);
-  workspace.projects[projectId].updatedAt = now();
+  project.chatIds.push(id);
+  project.updatedAt = now();
   workspace.selectedChatId = id;
   return { ...workspace };
 };
@@ -65,8 +67,10 @@ export const upsertMessage = (
   chatId: string,
   msg: { role: Message['role']; input?: ParserInput; result?: ParserResult; text?: string }
 ): Workspace => {
+  const chat = workspace.chats[chatId];
+  if (!chat) return workspace;
   const message: Message = { id: uuid(), role: msg.role, createdAt: now(), input: msg.input, result: msg.result, text: msg.text };
-  workspace.chats[chatId].messages.push(message);
-  workspace.chats[chatId].updatedAt = now();
+  chat.messages.push(message);
+  chat.updatedAt = now();
   return { ...workspace };
 };
