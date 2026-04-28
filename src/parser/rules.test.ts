@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { encodeDimension, encodePitch } from './encoding';
 import { buildFootprintName, detectFamily } from './rules';
 import { validateDescriptionLength } from './descriptions';
+import { parseLocally } from './localParser';
+import { classifyPopularPart } from './popularPartGrammars';
 
 describe('encoding', () => {
   it('encodes dimensions', () => {
@@ -37,5 +39,27 @@ describe('description', () => {
   it('enforces max length', () => {
     const input = 'x'.repeat(260);
     expect(validateDescriptionLength(input).length).toBeLessThanOrEqual(255);
+  });
+});
+
+describe('local parser mvp sanity', () => {
+  it('parses Murata GRM188 as 0603 capacitor instead of resistor', () => {
+    const result = parseLocally({ mpn: 'GRM188R71C104KA01D' });
+    expect(result.package.footprint_name).toContain('CAP-0603-1P6X0P8-HP8');
+    expect(result.altium.description.startsWith('CAP')).toBe(true);
+    expect(result.review_flags).toContain('POPULAR_GRAMMAR_HINT_USED');
+    expect(result.review_flags).toContain('DATASHEET_CONFIRMATION_REQUIRED');
+  });
+
+  it('uses popular grammar only when prefix includes expected grammar', () => {
+    expect(classifyPopularPart('RC')).toBeNull();
+    const hint = classifyPopularPart('RC0603FR-0710KL');
+    expect(hint?.family).toBe('RES');
+  });
+
+  it('detects TI TPS family as IC hint', () => {
+    const hint = classifyPopularPart('TPS62840DLCR');
+    expect(hint?.family).toBe('IC');
+    expect(hint?.manufacturer).toContain('Texas');
   });
 });

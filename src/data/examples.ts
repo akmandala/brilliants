@@ -5,5 +5,7 @@ export const examplePrompts = [
   { name: 'JAE WP26DK B2B', mpn: 'WP26DK-P040VA1-R8000' },
   { name: 'Hirose FH12 FPC', mpn: 'FH12-30S-0.5SH' },
   { name: 'JST PH connector', mpn: 'B2B-PH-K-S' },
-  { name: 'Wurth pin header', mpn: '61301021121' }
+  { name: 'Wurth pin header', mpn: '61301021121' },
+  { name: 'Yageo RC resistor', mpn: 'RC0603FR-0710KL' },
+  { name: 'TI TPS buck regulator', mpn: 'TPS62840DLCR' }
 ];

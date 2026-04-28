@@ -2,13 +2,12 @@ export const formatDecimalToken = (value: number): string =>
   value
     .toString()
     .replace('.', 'P')
-    .replace(/^0P/, 'P')
     .replace(/P0+$/, 'P0')
     .replace(/(P\d*?)0+$/, '$1');
 
 export const encodeDimension = (length: number, width: number, height?: number): string => {
   const lw = `${formatDecimalToken(length)}X${formatDecimalToken(width)}`;
-  return height ? `${lw}-H${formatDecimalToken(height)}` : lw;
+  return height ? `${lw}-H${formatDecimalToken(height).replace(/^0P/, 'P')}` : lw;
 };
 
 const pitchMap: Record<string, string> = {
