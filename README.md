@@ -1,57 +1,63 @@
-# Your Studio — Netlify Static Site
+# Component Parser Workspace
 
-This is a static multi-page website designed for Netlify hosting (Kickr-style layout).
+Production-oriented Netlify + React workspace for automated component parsing and footprint-name generation.
 
-## What’s included
-- Clean multi-page structure with pretty URLs (folder + index.html)
-- Netlify Forms contact form at `/contact/` (form name: `project-inquiry`)
-- Placeholder hero image at `/assets/img/hero-placeholder.svg` (replace with your own photo)
-- Simple CSS + minimal JS (mobile menu close on link tap)
+## Stack
 
-## Customize
-1) Replace **site name** and **email**:
-   - Search for `Your Studio` and `you@yourdomain.com` across the files.
-2) Replace hero image:
-   - Put your image at `/assets/img/hero.jpg` and update `index.html` to use it (or overwrite `hero-placeholder.svg`).
+- Vite + React + TypeScript
+- Tailwind CSS
+- Zod validation
+- `pdfjs-dist` PDF text extraction in browser
+- Netlify Functions API routes
+- Local-first persistence via localStorage
 
-## Deploy on Netlify
-### Option A: Drag-and-drop
-1) Zip the folder output (or use the provided zip).
-2) In Netlify: **Add new site → Deploy manually**, then drop the zip.
+## Scripts
 
-### Option B: Git-based deploy
-1) Push these files to a GitHub repo.
-2) In Netlify: **Add new site → Import an existing project**.
-3) Build settings:
-   - Build command: _(leave blank)_
-   - Publish directory: `.`
+```bash
+npm install
+npm run dev
+npm run build
+npm run typecheck
+npm run test
+```
 
-## Quickest GitHub flow (no terminal)
-If your branch is already on GitHub, the fastest next step is just:
-1) Open your repo on GitHub.
-2) Click the black **Create pull request** button.
-3) Merge the PR after review.
+## Environment variables
 
-## Why changes may not appear on GitHub
-If an AI agent edits files in a cloud/container workspace, those commits exist only in that workspace until they are pushed to your GitHub repository.
+Create `.env` locally and configure these in Netlify UI:
 
-Use this checklist to make sure GitHub gets updated:
-1) Confirm you are inside your local cloned repo (not `C:\Users\<you>` root):
-   - `cd C:\Users\<you>\brilliant`
-   - `git status`
-2) Confirm remote is configured:
-   - `git remote -v`
-   - If missing: `git remote add origin https://github.com/akmandala/brilliant.git`
-3) Confirm which branch has commits:
-   - `git branch --show-current`
-   - `git log --oneline -n 5`
-4) Push that branch:
-   - `git push -u origin <branch-name>`
+- `OPENAI_API_KEY` (optional): enables AI-enhanced parse in `/.netlify/functions/parse`.
+- `OPENAI_MODEL` (optional): default `gpt-4.1-mini`.
+- `LCSC_API_KEY` (optional)
+- `LCSC_API_SECRET` or `LCSC_SIGNATURE_SECRET` (optional)
+- `LCSC_API_BASE` (optional, default `https://ips.lcsc.com/rest/wmsc2agent`)
+- `JLCPCB_API_KEY` (optional)
+- `JLCPCB_API_SECRET` (optional)
+- `JLCPCB_API_BASE` (optional)
+- `MOCK_LOOKUP_ENABLED=true` (optional dev/demo fallback)
 
-If you made commits in a different environment, export/apply them with:
-- `git format-patch -1 <commit>` (from source repo)
-- `git am <patch-file>` (in your local repo), then push.
+> LCSC signature schemes can vary by account/API docs. Signature helper is isolated in `netlify/functions/_lib/signature.ts`; adjust algorithm if required.
 
-## Netlify Forms notes
-- Submissions will appear under **Site → Forms**.
-- You can enable email notifications inside Netlify settings.
+## Netlify deployment
+
+1. Push repo to Git provider.
+2. Create Netlify site from repo.
+3. Build command: `npm run build`.
+4. Publish dir: `dist`.
+5. Functions dir: `netlify/functions`.
+6. Configure env vars above.
+
+## Architecture workflow
+
+1. User enters required MPN and optional manufacturer, PDF, URL.
+2. Browser extracts PDF text with `pdfjs-dist`.
+3. Optional manufacturer URL text is fetched server-side.
+4. Client calls `parse` function for rule-based parse (AI optional).
+5. Client calls `lookup-lcsc-jlc` function for distributor matching.
+6. Result is rendered in cards and persisted in localStorage.
+7. Workspace can be exported/imported as JSON.
+
+## Notes
+
+- No login required for MVP.
+- If `OPENAI_API_KEY` is unavailable, parsing remains functional via local heuristics.
+- Mock lookup results are clearly labeled as `MOCK` source.
